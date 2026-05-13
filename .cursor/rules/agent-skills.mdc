@@ -1,0 +1,30 @@
+---
+description: How and when to discover and apply installed project agent skills
+alwaysApply: true
+---
+
+# Agent skills (this repo)
+
+Skills extend the agent with procedural knowledge. **Use them whenever the task matches a skill’s domain**—do not wait for the user to name a skill.
+
+## When to load skills
+
+- **Before** editing files or running domain-specific commands on a **non-trivial** task, decide which skills apply.
+- If multiple domains apply (e.g. Next.js App Router **and** shadcn UI), **read and follow every matching skill** in the same session.
+
+## How to discover what is installed
+
+1. Read [`skills-lock.json`](skills-lock.json) for declared project skills.
+2. Confirm entrypoints exist: [`.agents/skills/*/SKILL.md`](.agents/skills/).
+3. If lockfile and disk disagree, **trust the directories** that actually contain `SKILL.md`.
+
+## Required workflow
+
+1. **Classify** the work (routing, RSC, config, UI components, Tailwind, registry/CLI, etc.).
+2. **Open** each applicable `.agents/skills/<name>/SKILL.md` and follow its instructions, references, and checks **only as needed** for the task.
+3. **Apply** naming, patterns, deprecations, and verification steps from those skills.
+4. **Maintain metadata**: if skills are added, removed, or renamed, update `skills-lock.json` and [`AGENTS.md`](AGENTS.md) in the same change.
+
+## Authoritative detail
+
+For the full policy, skill table, and domain boundaries, see [`AGENTS.md`](AGENTS.md).

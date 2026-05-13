@@ -1,10 +1,14 @@
-import { Geist, Geist_Mono, Outfit } from "next/font/google"
+import type { ReactNode } from "react"
+import { Geist_Mono, Outfit } from "next/font/google"
 
 import "./globals.css"
+import { QueryProvider } from "@/components/providers/query-provider"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
-const outfit = Outfit({subsets:['latin'],variable:'--font-sans'})
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -14,16 +18,25 @@ const fontMono = Geist_Mono({
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: ReactNode
 }>) {
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", outfit.variable)}
+      className={cn(
+        "font-sans antialiased",
+        fontMono.variable,
+        outfit.variable
+      )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+            <Toaster richColors duration={4000} />
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

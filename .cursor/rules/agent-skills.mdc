@@ -20,11 +20,11 @@ Skills extend the agent with procedural knowledge. **Use them whenever the task 
 
 ## Required workflow
 
-1. **Classify** the work (routing, RSC, config, UI components, Tailwind, registry/CLI, etc.).
+1. **Classify** the work (routing, RSC, config, UI components, Tailwind, registry/CLI, TanStack Query/server state, UI/UX/accessibility, advanced TypeScript, etc.).
 2. **Open** each applicable `.agents/skills/<name>/SKILL.md` and follow its instructions, references, and checks **only as needed** for the task.
 3. **Apply** naming, patterns, deprecations, and verification steps from those skills.
 4. **Maintain metadata**: if skills are added, removed, or renamed, update `skills-lock.json` and [`AGENTS.md`](AGENTS.md) in the same change.
 
 ## Authoritative detail
 
-For the full policy, skill table, and domain boundaries, see [`AGENTS.md`](AGENTS.md).
+For the full policy, the canonical skill table (including **tanstack-query**, **react-query**, **ui-ux-pro-max**, **next-best-practices**, **shadcn**, **typescript-advanced-types**), and domain boundaries, see [`AGENTS.md`](AGENTS.md).

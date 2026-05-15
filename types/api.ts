@@ -4,11 +4,16 @@ export interface ApiResponse<T> {
   meta?: Meta | null
 }
 
+export type PaginatedListResponse<TData> = {
+  status: number
+  data: TData[]
+  meta: Meta
+}
+
 export interface Meta {
   page: number
   size: number
   total: number
-  totalPages: number
 }
 
 export interface ApiError {
@@ -24,8 +29,6 @@ export interface ApiError {
 export interface PageParams {
   page?: number
   size?: number
-  sort?: string
-  query?: string
 }
 
 export interface ApiListParams extends PageParams {

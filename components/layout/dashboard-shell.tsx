@@ -18,7 +18,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         <AppSidebar />
         <SidebarInset>
           <Topbar />
-          <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
+          <div className="@container/main flex flex-1 flex-col gap-6 p-4 pt-0">
             {children}
           </div>
         </SidebarInset>

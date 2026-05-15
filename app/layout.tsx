@@ -34,7 +34,7 @@ export default function RootLayout({
         <ThemeProvider>
           <QueryProvider>
             <TooltipProvider>{children}</TooltipProvider>
-            <Toaster richColors duration={4000} />
+            <Toaster position="bottom-center" richColors duration={4000} />
           </QueryProvider>
         </ThemeProvider>
       </body>

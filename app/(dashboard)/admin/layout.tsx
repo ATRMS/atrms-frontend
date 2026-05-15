@@ -1,9 +1,22 @@
 import type { ReactNode } from "react"
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query"
 
-export default function AdminLayout({
+import { prefetchAdminReferenceSelectQueries } from "@/lib/prefetch/admin-reference-select-queries"
+
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: ReactNode
 }>) {
-  return children
+  const queryClient = new QueryClient()
+
+  await prefetchAdminReferenceSelectQueries(queryClient)
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>
+  )
 }

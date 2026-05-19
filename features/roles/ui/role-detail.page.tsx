@@ -15,6 +15,7 @@ import { useSaveRolePermissionsMutation } from "@/features/roles/usecases/save-r
 import { DeleteRoleAlert } from "@/features/roles/ui/delete-role-alert"
 import { EditRoleDialog } from "@/features/roles/ui/edit-role-dialog"
 import { PermissionPickerPanels } from "@/features/roles/ui/permission-picker-panels"
+import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { PermissionGate } from "@/components/layout/permission-gate"
 import { BackLink } from "@/components/shared/back-link"
 import { Badge } from "@/components/ui/badge"
@@ -106,11 +107,7 @@ export function RoleDetailPage({ roleId }: RoleDetailPageProps) {
   return (
     <PermissionGate
       permission={PermissionCodes.roleRead}
-      fallback={
-        <p className="text-sm text-muted-foreground">
-          You don&apos;t have permission to view this role.
-        </p>
-      }
+      fallback={<PermissionDeniedFallback resourceLabel="this role" />}
     >
       <div className="flex flex-col gap-6">
         <BackLink href="/admin/roles">Roles</BackLink>

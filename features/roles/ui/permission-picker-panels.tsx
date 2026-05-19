@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 
 import type { PermissionCatalogItem } from "@/features/roles/types"
 import {
+  formatPermissionModuleLabel,
   groupPermissionsByModule,
   sortedModuleKeys,
 } from "@/features/roles/lib/group-permissions-by-module"
@@ -96,10 +97,6 @@ export function PermissionPickerPanels({
     onSelectedIdsChange(next)
   }
 
-  function moduleLabel(mod: string) {
-    return mod.replaceAll("_", " ")
-  }
-
   if (!catalog.length) {
     return (
       <p className="text-sm text-muted-foreground">
@@ -131,7 +128,7 @@ export function PermissionPickerPanels({
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <span className="truncate">{moduleLabel(mod)}</span>
+                <span className="truncate">{formatPermissionModuleLabel(mod)}</span>
                 <span className="shrink-0 tabular-nums text-xs text-muted-foreground">
                   {sel}/{list.length}
                 </span>
@@ -142,7 +139,9 @@ export function PermissionPickerPanels({
 
         <div className="flex min-h-0 flex-col gap-3 rounded-lg border p-3">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
-            <h3 className="text-sm font-medium">{moduleLabel(activeModule)}</h3>
+            <h3 className="text-sm font-medium">
+              {formatPermissionModuleLabel(activeModule)}
+            </h3>
             {!readOnly ? (
               <div className="flex flex-wrap gap-2">
                 <Button

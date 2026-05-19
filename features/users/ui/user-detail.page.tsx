@@ -21,6 +21,7 @@ import { UserCreatedPasswordDialog } from "@/features/users/ui/user-created-pass
 import { UserDeactivateConfirmAlert } from "@/features/users/ui/user-deactivate-confirm-alert"
 import { UserResetPasswordConfirmAlert } from "@/features/users/ui/user-reset-password-confirm-alert"
 import { UserUnlockConfirmAlert } from "@/features/users/ui/user-unlock-confirm-alert"
+import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { PermissionGate } from "@/components/layout/permission-gate"
 import { BackLink } from "@/components/shared/back-link"
 import { Button } from "@/components/ui/button"
@@ -376,11 +377,7 @@ export function UserDetailPage({ userId }: UserDetailPageProps) {
   return (
     <PermissionGate
       permission={PermissionCodes.userRead}
-      fallback={
-        <p className="text-sm text-muted-foreground">
-          You don&apos;t have permission to view this user.
-        </p>
-      }
+      fallback={<PermissionDeniedFallback resourceLabel="this user" />}
     >
       <div className="flex flex-col gap-6">
         {userQuery.isPending ? (

@@ -8,6 +8,7 @@ import type { CreateRoleDetailsValues } from "@/features/roles/schemas"
 import { CreateRoleDetailsDialog } from "@/features/roles/ui/create-role-details-dialog"
 import { CreateRolePermissionsSheet } from "@/features/roles/ui/create-role-permissions-sheet"
 import { useRolesListQuery } from "@/features/roles/usecases/roles-list.usecase"
+import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { PermissionGate } from "@/components/layout/permission-gate"
 import { PageHeader } from "@/components/layout/page-header"
 import { BasicDataTable } from "@/components/shared/basic-data-table"
@@ -45,11 +46,7 @@ export function RolesPage() {
   return (
     <PermissionGate
       permission={PermissionCodes.roleRead}
-      fallback={
-        <p className="text-sm text-muted-foreground">
-          You don&apos;t have permission to view roles.
-        </p>
-      }
+      fallback={<PermissionDeniedFallback resourceLabel="roles" />}
     >
       <div className="flex flex-col gap-6">
         <PageHeader

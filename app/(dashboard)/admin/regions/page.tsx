@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { RegionsPage } from "@/features/regions/ui/regions.page"
 
-export default function RegionsPage() {
-  return (
-    <ResourcePlaceholder
-      title="Regions"
-      description="Manage regional tax administration areas."
-    />
-  )
+export default function AdminRegionsRoutePage() {
+  return <RegionsPage />
 }

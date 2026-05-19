@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { BankAccountsPage } from "@/features/bank-accounts/ui/bank-accounts.page"
 
-export default function BankAccountsPage() {
-  return (
-    <ResourcePlaceholder
-      title="Bank Accounts"
-      description="Manage revenue collection bank accounts."
-    />
-  )
+export default function Page() {
+  return <BankAccountsPage />
 }

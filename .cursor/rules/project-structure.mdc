@@ -1,0 +1,58 @@
+---
+description: ATRMS Next.js app layout — routes, features, shared libs, tests
+alwaysApply: true
+---
+
+# Project structure (`atrms-frontend`)
+
+Next.js **App Router** (React 19). Imports use **`@/`** → repo root.
+
+## `app/` — routes only
+
+- **`layout.tsx`**, **`globals.css`**, **`page.tsx`**, **`error.tsx`** — root shell.
+- **`(auth)/`** — `login`, `forgot-password`.
+- **`(dashboard)/layout.tsx`** — dashboard chrome (sidebar/topbar).
+- **`(dashboard)/dashboard/page.tsx`** — main dashboard.
+- **`(dashboard)/admin/layout.tsx`** — prefetches admin reference queries (TanStack).
+- **`(dashboard)/admin/**`** — thin pages (master data, settings, **roles**, **roles/[id]**, **users**, **users/[id]**, **permissions**, …). Heavy UI lives in **`features/`**.
+
+## `features/` — domain code
+
+| Slice | Highlights |
+|-------|------------|
+| **`authentication/`** | `actions/`, `lib/` (JWT permissions, `permission-codes`), `store/auth-store.ts`, `ui/login.page.tsx`, schemas/types |
+| **`users/`** | `api/`, `columns/`, `lib/user-display.tsx`, `schemas.ts`, `types.ts`, `ui/*.tsx`, `usecases/*.usecase.ts` |
+| **`roles/`** | `api/roles-api.ts`, `columns/`, `lib/group-permissions-by-module.ts`, schemas/types, `ui/*.tsx`, `usecases/*.usecase.ts` |
+| **`permissions/`** | `ui/permissions.page.tsx` (reference list; uses roles permission-catalog query) |
+
+**Conventions:** **`*-api.ts`** = HTTP helpers · **`usecases/`** = TanStack Query/Mutation + **`queryKeys`** invalidation · **`schemas.ts`** = Zod · **`columns/`** = TanStack Table column defs.
+
+## `components/`
+
+- **`ui/`** — shadcn/Radix primitives (registry: root **`components.json`**).
+- **`layout/`** — `dashboard-shell`, `permission-gate`, `auth-guard`, `page-header`, `topbar`, `resource-placeholder`.
+- **`shared/`** — `basic-data-table`, `form-field`, `confirm-action-alert`, `back-link`, `error-boundary`.
+- **`data-table/`** — reusable table, filters, row actions.
+- **`providers/query-provider.tsx`** — TanStack provider.
+- **Nav:** `app-sidebar.tsx`, `nav-main.tsx`, `nav-user.tsx`, `team-switcher.tsx`, `theme-provider.tsx`.
+
+## `lib/`
+
+`api/client.ts`, `endpoints.ts`, `envelope.ts` · `query-keys.ts` · `query/`, `prefetch/` · `config/env.ts`, `cookies.ts` · `notify.ts`, `form-errors.ts`, **`utils.ts`** (`cn`).
+
+## Repo roots
+
+`hooks/` · `store/uiStore.ts` · **`types/`** (`api.ts`, `domain/`) · **`lib/schemas/`** · **`__tests__/`** · **`test/setup.ts`** · **`vitest.config.ts`**.
+
+## Agent / CI / docs
+
+**`AGENTS.md`**, **`skills-lock.json`**, **`.agents/skills/*/SKILL.md`** · **`.cursor/rules/*.mdc`** · **`.github/workflows/frontend-ci.yml`** · **`epic-*.md`** (specs, not runtime).
+
+## Full source file listing (~156 `.ts`/`.tsx`/`.mjs` excl. `node_modules`/`.next`/`.git`)
+
+```bash
+find . \( -path ./node_modules -o -path ./.git -o -path ./.next \) -prune -o \
+  -type f \( -name '*.ts' -o -name '*.tsx' -o -name '*.mjs' \) -print | grep -v node_modules | sort
+```
+
+**Verify:** `npm run lint` · `npm run typecheck` · `npm test`

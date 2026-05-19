@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { TaxOfficesPage } from "@/features/tax-offices/ui/tax-offices.page"
 
-export default function TaxOfficesPage() {
-  return (
-    <ResourcePlaceholder
-      title="Tax Offices"
-      description="Manage tax office records."
-    />
-  )
+export default function AdminTaxOfficesRoutePage() {
+  return <TaxOfficesPage />
 }

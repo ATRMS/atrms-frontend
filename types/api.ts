@@ -29,6 +29,11 @@ export interface ApiError {
 export interface PageParams {
   page?: number
   size?: number
+  /**
+   * Server-side search term for list endpoints that support it.
+   * Omit from requests when the backend does not expose search for that resource.
+   */
+  search?: string
 }
 
 export interface ApiListParams extends PageParams {

@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { CurrenciesPage } from "@/features/currencies/ui/currencies.page"
 
-export default function CurrenciesPage() {
-  return (
-    <ResourcePlaceholder
-      title="Currencies"
-      description="Manage accepted currencies."
-    />
-  )
+export default function Page() {
+  return <CurrenciesPage />
 }

@@ -3,8 +3,14 @@ import "server-only"
 import type { QueryClient } from "@tanstack/react-query"
 
 import {
+  businessLinesReferenceQueryOptions,
+  currenciesReferenceQueryOptions,
+  regionsReferenceQueryOptions,
   rolesReferenceSelectQueryOptions,
+  taxOfficesActiveReferenceQueryOptions,
   taxOfficesReferenceSelectQueryOptions,
+  taxTypesActiveReferenceQueryOptions,
+  taxTypesReferenceQueryOptions,
 } from "@/lib/query/admin-reference-select-queries"
 
 /**
@@ -17,5 +23,11 @@ export async function prefetchAdminReferenceSelectQueries(
   await Promise.all([
     queryClient.prefetchQuery(rolesReferenceSelectQueryOptions()),
     queryClient.prefetchQuery(taxOfficesReferenceSelectQueryOptions()),
+    queryClient.prefetchQuery(taxOfficesActiveReferenceQueryOptions()),
+    queryClient.prefetchQuery(businessLinesReferenceQueryOptions()),
+    queryClient.prefetchQuery(regionsReferenceQueryOptions()),
+    queryClient.prefetchQuery(taxTypesReferenceQueryOptions()),
+    queryClient.prefetchQuery(taxTypesActiveReferenceQueryOptions()),
+    queryClient.prefetchQuery(currenciesReferenceQueryOptions()),
   ])
 }

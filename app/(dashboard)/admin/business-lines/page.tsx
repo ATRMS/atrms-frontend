@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { BusinessLinesPage } from "@/features/business-lines/ui/business-lines.page"
 
-export default function BusinessLinesPage() {
-  return (
-    <ResourcePlaceholder
-      title="Business Lines"
-      description="Manage revenue business lines."
-    />
-  )
+export default function AdminBusinessLinesRoutePage() {
+  return <BusinessLinesPage />
 }

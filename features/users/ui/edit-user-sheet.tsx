@@ -14,6 +14,7 @@ import {
   type UpdateUserFormValues,
 } from "@/features/users/schemas"
 import { useUpdateUserMutation } from "@/features/users/usecases/update-user.usecase"
+import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { FormField } from "@/components/shared/form-field"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
@@ -339,9 +340,12 @@ export function EditUserSheet({
             </FieldGroup>
 
             {!canUpdate ? (
-              <p className="mt-4 text-sm text-muted-foreground">
-                You don&apos;t have permission to update users.
-              </p>
+              <PermissionDeniedFallback
+                variant="inline"
+                accessVerb="update"
+                resourceLabel="users"
+                className="mt-4"
+              />
             ) : null}
           </div>
 

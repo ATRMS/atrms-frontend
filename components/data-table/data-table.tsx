@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -43,6 +43,7 @@ export type {
   DataTableDateFilter,
   DataTableFilterConfig,
   DataTableNumberFilter,
+  DataTableSearchFilter,
   DataTableSelectFilter,
   DataTableTextFilter,
 } from "@/components/data-table/data-table-filters"
@@ -117,7 +118,8 @@ export function DataTable<TData, TValue = unknown>({
         page: Math.max(0, (listParams.page ?? 1) - 1),
       }
       return queryFn(params)
-    }
+    },
+    placeholderData: keepPreviousData,
   })
 
   const rows = data?.data ?? []
@@ -200,7 +202,7 @@ export function DataTable<TData, TValue = unknown>({
                 </TableCell>
               </TableRow>
             ) : isFetching ? (
-              Array.from({ length: 5 }).map((_, rowIndex) => (
+              Array.from({ length: 10 }).map((_, rowIndex) => (
                 <TableRow key={rowIndex}>
                   {columns.map((_, cellIndex) => (
                     <TableCell key={cellIndex}>

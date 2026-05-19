@@ -4,9 +4,12 @@ import * as React from "react"
 import {
   BanknoteIcon,
   BellIcon,
+  BriefcaseIcon,
   Building2Icon,
   CircleDollarSignIcon,
   FileSlidersIcon,
+  KeyRoundIcon,
+  LandmarkIcon,
   LayoutDashboardIcon,
   MapPinIcon,
   Settings2Icon,
@@ -108,6 +111,18 @@ const data = {
           permission: PermissionCodes.masterDataRead,
         },
         {
+          title: "Organizations",
+          url: "/admin/organizations",
+          icon: <LandmarkIcon />,
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Professions",
+          url: "/admin/professions",
+          icon: <BriefcaseIcon />,
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
           title: "Global Settings",
           url: "/admin/settings",
           icon: <Settings2Icon />,
@@ -123,6 +138,12 @@ const data = {
           title: "Roles",
           url: "/admin/roles",
           icon: <ShieldIcon />,
+          permission: PermissionCodes.roleRead,
+        },
+        {
+          title: "Permissions",
+          url: "/admin/permissions",
+          icon: <KeyRoundIcon />,
           permission: PermissionCodes.roleRead,
         },
         {

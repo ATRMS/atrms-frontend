@@ -21,7 +21,6 @@ Current installed project skills:
 | **next-best-practices** | [`.agents/skills/next-best-practices/SKILL.md`](.agents/skills/next-best-practices/SKILL.md) | Working with Next.js App Router, `app/**` (or `src/app/**`), routing, layouts, Server Components or Actions, middleware/proxy, `next.config.*`, metadata, fetching/caching, Vercel deployment, or Next CLI behavior. |
 | **shadcn** | [`.agents/skills/shadcn/SKILL.md`](.agents/skills/shadcn/SKILL.md) | Working with UI, `components.json`, `components/**`, `components/ui/**`, Tailwind, design tokens, forms, dialogs, component composition, icons, or shadcn CLI/registry usage. |
 | **tanstack-query** | [`.agents/skills/tanstack-query/SKILL.md`](.agents/skills/tanstack-query/SKILL.md) | TanStack Query v5 (`@tanstack/react-query`): queries, mutations, query keys, caching/invalidation, prefetch, infinite queries, suspense integration, and related server-state patterns. |
-| **react-query** | [`.agents/skills/react-query/SKILL.md`](.agents/skills/react-query/SKILL.md) | Server-state organization, query/mutation hook structure, and React Query ecosystem habits. Prefer **tanstack-query** for v5-specific APIs used in this repo. |
 | **typescript-advanced-types** | [`.agents/skills/typescript-advanced-types/SKILL.md`](.agents/skills/typescript-advanced-types/SKILL.md) | Complex type logic: generics, conditional/mapped/template-literal types, utility types, inference-heavy APIs, reusable type helpers, type-safe clients/config/validation/state, or library-grade typing in `.ts`/`.tsx`. |
 | **ui-ux-pro-max** | [`.agents/skills/ui-ux-pro-max/SKILL.md`](.agents/skills/ui-ux-pro-max/SKILL.md) | UI structure, visual design, UX review, accessibility, typography/color/spacing decisions, dashboards and admin layouts, motion/responsive behavior, and stack-aware guidance (including Tailwind/shadcn). |
 
@@ -32,7 +31,7 @@ Use every matching skill, not just the most specific one.
 - If the task touches App Router code and UI components, use both **next-best-practices** and **shadcn**.
 - If the task touches only routing, metadata, server/client boundaries, data fetching, or Next config, use **next-best-practices**.
 - If the task touches only component composition, styling, Tailwind, icons, forms, dialogs, or `components.json`, use **shadcn**.
-- If the task involves TanStack Query (`useQuery`, `useMutation`, keys, cache lifecycle, devtools), read **tanstack-query**; use **react-query** as supplementary guidance where it does not conflict with v5.
+- If the task involves TanStack Query (`useQuery`, `useMutation`, keys, cache lifecycle, devtools), read **tanstack-query**.
 - If the task changes how something looks, feels, moves, or is interacted with—or you need UX/accessibility/visual-quality review—use **ui-ux-pro-max** (often together with **shadcn**).
 - If the task involves advanced typing, generics, conditional/mapped types, careful inference, or shared type utilities across modules, use **typescript-advanced-types** (often together with **next-best-practices** and/or **shadcn** when those areas overlap).
 - If another installed skill applies to persistence, auth, testing, deployment, or another domain, use that skill as well after reading its `SKILL.md`.

@@ -1,0 +1,25 @@
+"use client"
+
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
+import { activateTaxOffice } from "@/features/tax-offices/api/tax-offices-api"
+import { normaliseError } from "@/lib/api/client"
+import { notify } from "@/lib/notify"
+import { queryKeys } from "@/lib/query-keys"
+
+export function useActivateTaxOfficeMutation(id: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => activateTaxOffice(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: queryKeys.masterData.taxOfficesRoot(),
+      })
+      notify.success("Tax office activated.")
+    },
+    onError: (error: unknown) => {
+      notify.error(normaliseError(error).message)
+    },
+  })
+}

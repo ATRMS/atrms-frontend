@@ -27,4 +27,4 @@ Skills extend the agent with procedural knowledge. **Use them whenever the task 
 
 ## Authoritative detail
 
-For the full policy, the canonical skill table (including **tanstack-query**, **react-query**, **ui-ux-pro-max**, **next-best-practices**, **shadcn**, **typescript-advanced-types**), and domain boundaries, see [`AGENTS.md`](AGENTS.md).
+For the full policy, the canonical skill table (including **tanstack-query**, **ui-ux-pro-max**, **next-best-practices**, **shadcn**, **typescript-advanced-types**), and domain boundaries, see [`AGENTS.md`](AGENTS.md).

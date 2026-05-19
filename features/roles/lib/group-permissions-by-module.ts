@@ -1,5 +1,10 @@
 import type { PermissionCatalogItem } from "@/features/roles/types"
 
+/** Display label for a permission `module` key from the API (e.g. `MASTER_DATA`). */
+export function formatPermissionModuleLabel(moduleKey: string): string {
+  return moduleKey.replaceAll("_", " ")
+}
+
 export function groupPermissionsByModule(
   items: PermissionCatalogItem[]
 ): Map<string, PermissionCatalogItem[]> {

@@ -7,6 +7,7 @@ import { PermissionCodes } from "@/features/authentication/lib/permission-codes"
 import { fetchUsersList } from "@/features/users/api/users-api"
 import { usersColumns } from "@/features/users/columns/users.columns"
 import { CreateUserSheet } from "@/features/users/ui/create-user-sheet"
+import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { PermissionGate } from "@/components/layout/permission-gate"
 import { PageHeader } from "@/components/layout/page-header"
 import {
@@ -79,11 +80,7 @@ export function UsersPage() {
   return (
     <PermissionGate
       permission={PermissionCodes.userRead}
-      fallback={
-        <p className="text-sm text-muted-foreground">
-          You don&apos;t have permission to view users.
-        </p>
-      }
+      fallback={<PermissionDeniedFallback resourceLabel="users" />}
     >
       <div className="flex flex-col gap-6">
         <PageHeader

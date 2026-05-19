@@ -1,7 +1,9 @@
 "use client"
 
+import type { VariantProps } from "class-variance-authority"
+
 import type { UserAccountStatus, UserListItem } from "@/features/users/types"
-import { Badge } from "@/components/ui/badge"
+import { Badge, badgeVariants } from "@/components/ui/badge"
 
 export function formatUserFullName(
   user: Pick<UserListItem, "firstName" | "middleName" | "lastName">
@@ -17,25 +19,18 @@ export function formatUserStatusLabel(status: UserAccountStatus): string {
   return lower.charAt(0).toUpperCase() + lower.slice(1)
 }
 
-const userStatusBadgeClassName: Record<UserAccountStatus, string> = {
-  ACTIVE:
-    "border-emerald-500/30 bg-emerald-500/15 text-emerald-800 dark:text-emerald-300",
-  INACTIVE: "text-muted-foreground",
-  LOCKED: "",
-  PENDING:
-    "border-amber-500/30 bg-amber-500/15 text-amber-900 dark:text-amber-200",
+type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>
+
+const userStatusBadgeVariant: Record<UserAccountStatus, BadgeVariant> = {
+  ACTIVE: "success",
+  INACTIVE: "secondary",
+  LOCKED: "destructive",
+  PENDING: "pending",
 }
 
 export function UserStatusBadge({ status }: { status: UserAccountStatus }) {
-  const variant =
-    status === "LOCKED"
-      ? "destructive"
-      : status === "INACTIVE"
-        ? "secondary"
-        : "outline"
-
   return (
-    <Badge variant={variant} className={userStatusBadgeClassName[status]}>
+    <Badge variant={userStatusBadgeVariant[status]} className="font-normal">
       {formatUserStatusLabel(status)}
     </Badge>
   )

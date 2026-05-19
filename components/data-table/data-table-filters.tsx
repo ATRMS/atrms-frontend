@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type InputHTMLAttributes } from "react"
 import { endOfDay, format, isValid, parseISO, startOfDay } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, SearchIcon } from "lucide-react"
 
 import { useDebounce } from "@/hooks/useDebounce"
 import type { ApiListParams } from "@/types/api"
@@ -46,6 +46,19 @@ export type DataTableTextFilter = {
   debounceMs?: number
 }
 
+export type DataTableSearchFilter = {
+  type: "search"
+  /**
+   * Query param forwarded to list APIs that support search (see `PageParams.search`).
+   * Defaults to `"search"`.
+   */
+  paramKey?: string
+  label?: string
+  placeholder?: string
+  widthClass?: string
+  debounceMs?: number
+}
+
 export type DataTableNumberFilter = {
   type: "number"
   paramKey: string
@@ -67,8 +80,15 @@ export type DataTableDateFilter = {
 export type DataTableFilterConfig =
   | DataTableSelectFilter
   | DataTableTextFilter
+  | DataTableSearchFilter
   | DataTableNumberFilter
   | DataTableDateFilter
+
+/** Resolved URL/API param name for a filter row (search defaults to `search`). */
+export function dataTableFilterParamKey(f: DataTableFilterConfig): string {
+  if (f.type === "search") return f.paramKey ?? "search"
+  return f.paramKey
+}
 
 export type DataTableUrlState = {
   page: number
@@ -98,7 +118,8 @@ export function parseDataTableUrlState(
       const empty = f.emptyValue ?? "__all__"
       filterValues[f.paramKey] = sp.get(f.paramKey) ?? empty
     } else {
-      filterValues[f.paramKey] = sp.get(f.paramKey) ?? ""
+      const pk = dataTableFilterParamKey(f)
+      filterValues[pk] = sp.get(pk) ?? ""
     }
   }
 
@@ -116,12 +137,13 @@ export function serializeDataTableUrlState(
   if (state.size !== defaultPageSize) p.set("size", String(state.size))
 
   for (const f of filters) {
-    const v = state.filterValues[f.paramKey] ?? ""
+    const pk = dataTableFilterParamKey(f)
+    const v = state.filterValues[pk] ?? ""
     if (f.type === "select") {
       const empty = f.emptyValue ?? "__all__"
       if (v && v !== empty) p.set(f.paramKey, v)
     } else if (v.trim()) {
-      p.set(f.paramKey, v.trim())
+      p.set(pk, v.trim())
     }
   }
 
@@ -137,7 +159,8 @@ export function mergeDataTableListParams(
   const params: ApiListParams = { page, size }
 
   for (const f of filters) {
-    const raw = filterValues[f.paramKey]
+    const pk = dataTableFilterParamKey(f)
+    const raw = filterValues[pk]
     if (f.type === "select") {
       const empty = f.emptyValue ?? "__all__"
       const v = raw ?? empty
@@ -146,10 +169,14 @@ export function mergeDataTableListParams(
       const v = raw?.trim() ?? ""
       if (!v) continue
       const n = Number(v)
-      if (Number.isFinite(n)) params[f.paramKey] = n
-    } else if (f.type === "text" || f.type === "date") {
+      if (Number.isFinite(n)) params[pk] = n
+    } else if (
+      f.type === "text" ||
+      f.type === "search" ||
+      f.type === "date"
+    ) {
       const v = raw?.trim() ?? ""
-      if (v) params[f.paramKey] = v
+      if (v) params[pk] = v
     }
   }
 
@@ -235,6 +262,7 @@ function DebouncedTextFilter({
   placeholder,
   label,
   widthClass,
+  inputClassName,
   debounceMs,
   inputMode,
   type,
@@ -245,6 +273,7 @@ function DebouncedTextFilter({
   placeholder?: string
   label?: string
   widthClass?: string
+  inputClassName?: string
   debounceMs: number
   inputMode?: InputHTMLAttributes<HTMLInputElement>["inputMode"]
   type: "text" | "number"
@@ -298,7 +327,7 @@ function DebouncedTextFilter({
       value={draft}
       onChange={(e) => setDraft(e.target.value)}
       placeholder={placeholder ?? label}
-      className={cn(widthClass ?? "sm:max-w-xs")}
+      className={cn(widthClass ?? "sm:max-w-xs", inputClassName)}
       aria-label={label ?? placeholder ?? paramKey}
     />
   )
@@ -316,12 +345,14 @@ export function DataTableFilters({
     [onFiltersPatch]
   )
 
+  const DEBOUNCE_MS = 500
+
   if (filters.length === 0) return null
 
   return (
     <div className="flex flex-wrap gap-2">
       {filters.map((f) => {
-        const aria = f.label ?? f.placeholder ?? f.paramKey
+        const aria = f.label ?? f.placeholder ?? dataTableFilterParamKey(f)
 
         if (f.type === "select") {
           const empty = f.emptyValue ?? "__all__"
@@ -334,7 +365,7 @@ export function DataTableFilters({
               onValueChange={(next) => patchOne(f.paramKey, next)}
             >
               <SelectTrigger
-                className={f.widthClass ?? "w-[160px]"}
+                className={cn(f.widthClass ?? "w-[160px]", "py-1")}
                 aria-label={aria}
               >
                 <SelectValue placeholder={f.placeholder ?? f.label} />
@@ -353,29 +384,53 @@ export function DataTableFilters({
         }
 
         if (f.type === "text") {
+          const pk = dataTableFilterParamKey(f)
           return (
             <DebouncedTextFilter
-              key={f.paramKey}
-              paramKey={f.paramKey}
+              key={pk}
+              paramKey={pk}
               type="text"
-              value={filterValues[f.paramKey] ?? ""}
+              value={filterValues[pk] ?? ""}
               placeholder={f.placeholder}
               label={f.label}
               widthClass={f.widthClass}
-              debounceMs={f.debounceMs ?? 300}
+              debounceMs={f.debounceMs ?? DEBOUNCE_MS}
               onFiltersPatch={onFiltersPatch}
             />
           )
         }
 
+        if (f.type === "search") {
+          const pk = dataTableFilterParamKey(f)
+          return (
+            <div key={pk} className="relative min-w-[300px]">
+              <SearchIcon
+                aria-hidden
+                className="pointer-events-none absolute top-1/2 left-2.5 z-10 size-4 -translate-y-1/2 text-muted-foreground"
+              />
+              <DebouncedTextFilter
+                paramKey={pk}
+                type="text"
+                value={filterValues[pk] ?? ""}
+                placeholder={f.placeholder ?? "Search…"}
+                label={f.label ?? "Search"}
+                inputClassName="h-9 w-full pl-9"
+                debounceMs={f.debounceMs ?? DEBOUNCE_MS}
+                onFiltersPatch={onFiltersPatch}
+              />
+            </div>
+          )
+        }
+
         if (f.type === "number") {
+          const pk = dataTableFilterParamKey(f)
           return (
             <DebouncedTextFilter
-              key={f.paramKey}
-              paramKey={f.paramKey}
+              key={pk}
+              paramKey={pk}
               type="number"
               inputMode="numeric"
-              value={filterValues[f.paramKey] ?? ""}
+              value={filterValues[pk] ?? ""}
               placeholder={f.placeholder}
               label={f.label}
               widthClass={f.widthClass ?? "w-[120px]"}
@@ -385,17 +440,22 @@ export function DataTableFilters({
           )
         }
 
-        return (
-          <FilterDateInput
-            key={f.paramKey}
-            id={`dt-filter-${f.paramKey}`}
-            boundary={f.boundary}
-            value={filterValues[f.paramKey] ?? ""}
-            placeholder={f.placeholder ?? f.label ?? "Pick a date"}
-            widthClass={f.widthClass}
-            onChange={(iso) => patchOne(f.paramKey, iso)}
-          />
-        )
+        if (f.type === "date") {
+          const pk = dataTableFilterParamKey(f)
+          return (
+            <FilterDateInput
+              key={pk}
+              id={`dt-filter-${pk}`}
+              boundary={f.boundary}
+              value={filterValues[pk] ?? ""}
+              placeholder={f.placeholder ?? f.label ?? "Pick a date"}
+              widthClass={f.widthClass}
+              onChange={(iso) => patchOne(pk, iso)}
+            />
+          )
+        }
+
+        return null
       })}
     </div>
   )

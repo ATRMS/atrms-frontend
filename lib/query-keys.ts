@@ -17,12 +17,62 @@ export const queryKeys = {
       all: () => [...queryKeys.admin.all, "reference-select-options"] as const,
       roles: () =>
         [...queryKeys.admin.referenceSelectOptions.all(), "roles"] as const,
-      taxOffices: () =>
-        [
-          ...queryKeys.admin.referenceSelectOptions.all(),
-          "tax-offices",
-        ] as const,
     },
+  },
+
+  masterData: {
+    all: ["master-data"] as const,
+    businessLinesRoot: () =>
+      [...queryKeys.masterData.all, "business-lines"] as const,
+    businessLinesLists: () =>
+      [...queryKeys.masterData.businessLinesRoot(), "list"] as const,
+    businessLinesRef: () =>
+      [...queryKeys.masterData.businessLinesRoot(), "ref"] as const,
+    taxTypesRoot: () =>
+      [...queryKeys.masterData.all, "tax-types"] as const,
+    taxTypesLists: () =>
+      [...queryKeys.masterData.taxTypesRoot(), "list"] as const,
+    /** Reference list for resolving tax type labels (includes inactive rows). */
+    taxTypesRef: () =>
+      [...queryKeys.masterData.taxTypesRoot(), "ref"] as const,
+    regionsRoot: () =>
+      [...queryKeys.masterData.all, "regions"] as const,
+    regionsLists: () =>
+      [...queryKeys.masterData.regionsRoot(), "list"] as const,
+    regionsRef: () =>
+      [...queryKeys.masterData.regionsRoot(), "ref"] as const,
+    taxOfficesRoot: () =>
+      [...queryKeys.masterData.all, "tax-offices"] as const,
+    taxOfficesLists: () =>
+      [...queryKeys.masterData.taxOfficesRoot(), "list"] as const,
+    taxOfficesRef: () =>
+      [...queryKeys.masterData.taxOfficesRoot(), "ref"] as const,
+    taxOfficesActiveRef: () =>
+      [...queryKeys.masterData.taxOfficesRoot(), "ref-active"] as const,
+    revenueTargetsRoot: () =>
+      [...queryKeys.masterData.all, "revenue-targets"] as const,
+    revenueTargetsLists: () =>
+      [...queryKeys.masterData.revenueTargetsRoot(), "list"] as const,
+    currenciesRoot: () =>
+      [...queryKeys.masterData.all, "currencies"] as const,
+    currenciesLists: () =>
+      [...queryKeys.masterData.currenciesRoot(), "list"] as const,
+    currenciesRef: () =>
+      [...queryKeys.masterData.currenciesRoot(), "ref"] as const,
+    taxTypesActiveRef: () =>
+      [...queryKeys.masterData.taxTypesRoot(), "ref-active"] as const,
+    bankAccountsRoot: () =>
+      [...queryKeys.masterData.all, "bank-accounts"] as const,
+    bankAccountsLists: () =>
+      [...queryKeys.masterData.bankAccountsRoot(), "list"] as const,
+    organizationsRoot: () =>
+      [...queryKeys.masterData.all, "organizations"] as const,
+    organizationsLists: () =>
+      [...queryKeys.masterData.organizationsRoot(), "list"] as const,
+    professionsRoot: () =>
+      [...queryKeys.masterData.all, "professions"] as const,
+    professionsLists: () =>
+      [...queryKeys.masterData.professionsRoot(), "list"] as const,
   },
 
   roles: {

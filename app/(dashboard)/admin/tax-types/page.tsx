@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { TaxTypesPage } from "@/features/tax-types/ui/tax-types.page"
 
-export default function TaxTypesPage() {
-  return (
-    <ResourcePlaceholder
-      title="Tax Types"
-      description="Manage tax type definitions."
-    />
-  )
+export default function AdminTaxTypesRoutePage() {
+  return <TaxTypesPage />
 }

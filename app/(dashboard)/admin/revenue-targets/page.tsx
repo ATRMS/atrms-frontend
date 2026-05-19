@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { RevenueTargetsPage } from "@/features/revenue-targets/ui/revenue-targets.page"
 
-export default function RevenueTargetsPage() {
-  return (
-    <ResourcePlaceholder
-      title="Revenue Targets"
-      description="Manage revenue target configuration."
-    />
-  )
+export default function Page() {
+  return <RevenueTargetsPage />
 }

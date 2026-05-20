@@ -31,8 +31,9 @@ Next.js **App Router** (React 19). Imports use **`@/`** → repo root.
 
 - **`ui/`** — shadcn/Radix primitives (registry: root **`components.json`**).
 - **`layout/`** — `dashboard-shell`, `permission-gate`, `auth-guard`, `page-header`, `topbar`, `resource-placeholder`.
-- **`shared/`** — `basic-data-table`, `form-field`, `confirm-action-alert`, `back-link`, `error-boundary`.
+- **`shared/`** — `basic-data-table`, `form-field`, `confirm-action-alert`, `back-link`, `error-boundary`, `iso-date-picker`, `profile-read-only-field`, `tax-office-lookup`, … Prefer extending shared UI + `features/*/lib` helpers over duplicating shells or logic (**`.cursor/rules/shared-primitives.mdc`**).
 - **`data-table/`** — reusable table, filters, row actions.
+- **List pages:** `.cursor/rules/admin-list-pages.mdc` — **`DataTable`** vs **`BasicDataTable`**, **`PageHeader`** / permission shell, **`DataTableRowActions`**.
 - **`providers/query-provider.tsx`** — TanStack provider.
 - **Nav:** `app-sidebar.tsx`, `nav-main.tsx`, `nav-user.tsx`, `team-switcher.tsx`, `theme-provider.tsx`.
 

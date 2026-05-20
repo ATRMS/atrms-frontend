@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { format, isValid, parse, parseISO } from "date-fns"
-import { type ReactNode, useState } from "react"
+import { useState } from "react"
 
 import { PermissionCodes } from "@/features/authentication/lib/permission-codes"
 import { useAuthStore } from "@/features/authentication/store/auth-store"
@@ -24,6 +24,7 @@ import { UserUnlockConfirmAlert } from "@/features/users/ui/user-unlock-confirm-
 import { PermissionDeniedFallback } from "@/components/layout/permission-denied-fallback"
 import { PermissionGate } from "@/components/layout/permission-gate"
 import { BackLink } from "@/components/shared/back-link"
+import { ProfileReadOnlyField } from "@/components/shared/profile-read-only-field"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -64,21 +65,6 @@ function formatTransferCreatedAt(value: string | null | undefined): string {
   }
 
   return isValid(parsed) ? format(parsed, "MMM d, yyyy h:mm a") : raw
-}
-
-function ProfileReadOnlyField({
-  label,
-  value,
-}: {
-  label: string
-  value: ReactNode
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-      <dd className="text-sm">{value}</dd>
-    </div>
-  )
 }
 
 function UserDetailLoaded({

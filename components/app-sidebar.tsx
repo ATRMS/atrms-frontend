@@ -8,6 +8,7 @@ import {
   Building2Icon,
   CircleDollarSignIcon,
   FileSlidersIcon,
+  IdCardIcon,
   KeyRoundIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
@@ -62,6 +63,12 @@ const data = {
       title: "Dashboard",
       url: "/dashboard",
       icon: <LayoutDashboardIcon />,
+    },
+    {
+      title: "Taxpayer Registry",
+      url: "/admin/taxpayers",
+      icon: <IdCardIcon />,
+      permission: PermissionCodes.taxpayerRead,
     },
     {
       title: "Administration",

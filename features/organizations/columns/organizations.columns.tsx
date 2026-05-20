@@ -8,29 +8,8 @@ import type { ColumnDef } from "@tanstack/react-table"
 import type { OrganizationListItem } from "@/features/organizations/types"
 import { OrganizationStatusBadge } from "@/features/organizations/lib/organization-display"
 import { OrganizationRowActions } from "@/features/organizations/ui/organization-row-actions"
-import { businessLinesReferenceQueryOptions, taxOfficesReferenceSelectQueryOptions } from "@/lib/query/admin-reference-select-queries"
-
-function TaxOfficeNameCell({ taxOfficeId }: { taxOfficeId: string }) {
-  const { data: offices = [] } = useQuery(
-    taxOfficesReferenceSelectQueryOptions()
-  )
-
-  const label = useMemo(() => {
-    const o = offices.find((x) => x.id === taxOfficeId)
-    if (o) return `${o.code} — ${o.name}`
-    return taxOfficeId
-  }, [taxOfficeId, offices])
-
-  const resolved = offices.some((x) => x.id === taxOfficeId)
-
-  if (resolved) {
-    return <span className="text-sm">{label}</span>
-  }
-
-  return (
-    <span className="font-mono text-xs text-muted-foreground">{label}</span>
-  )
-}
+import { TaxOfficeNameCell } from "@/components/shared/tax-office-name-cell"
+import { businessLinesReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
 
 function BusinessLineNameCell({
   businessLineId,

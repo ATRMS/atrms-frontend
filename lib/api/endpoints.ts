@@ -10,24 +10,39 @@ export const apiPaths = {
   },
   users: {
     collection: "/users",
-    detail: (id: string) =>
-      `/users/${encodeURIComponent(id)}` as const,
+    detail: (id: string) => `/users/${encodeURIComponent(id)}` as const,
     resetPassword: (id: string) =>
       `/users/${encodeURIComponent(id)}/reset-password` as const,
-    status: (id: string) =>
-      `/users/${encodeURIComponent(id)}/status` as const,
+    status: (id: string) => `/users/${encodeURIComponent(id)}/status` as const,
     transfers: (id: string) =>
       `/users/${encodeURIComponent(id)}/transfers` as const,
   },
   roles: {
     collection: "/roles",
-    detail: (id: string) =>
-      `/roles/${encodeURIComponent(id)}` as const,
+    detail: (id: string) => `/roles/${encodeURIComponent(id)}` as const,
     permissions: (id: string) =>
       `/roles/${encodeURIComponent(id)}/permissions` as const,
   },
   permissions: {
     collection: "/permissions",
+  },
+  taxpayers: {
+    tinRequests: "/tin-requests",
+    tinRequestApprove: (id: string) =>
+      `/tin-requests/${encodeURIComponent(id)}/approve` as const,
+    tinRequestReject: (id: string) =>
+      `/tin-requests/${encodeURIComponent(id)}/reject` as const,
+    collection: "/taxpayers",
+    lookup: "/taxpayers/lookup",
+    detail: (id: string) =>
+      `/taxpayers/individuals/${encodeURIComponent(id)}` as const,
+    corporateDetail: (id: string) =>
+      `/taxpayers/corporates/${encodeURIComponent(id)}` as const,
+    /** Canonical taxpayer resource (e.g. DELETE per epic). */
+    resource: (id: string) =>
+      `/taxpayers/${encodeURIComponent(id)}` as const,
+    status: (id: string) =>
+      `/taxpayers/${encodeURIComponent(id)}/status` as const,
   },
   masterData: {
     taxOffices: "/master-data/tax-offices",

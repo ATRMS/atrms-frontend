@@ -1,0 +1,47 @@
+---
+description: Admin list screens — page shell, DataTable vs BasicDataTable, row actions
+globs: features/**/ui/*.page.tsx
+alwaysApply: false
+---
+
+# Admin list pages (`*.page.tsx` under features)
+
+## Page shell (dashboard lists)
+
+Use this vertical rhythm unless a spec says otherwise:
+
+1. **`PermissionGate`** + **`PermissionDeniedFallback`** for the page-level read permission (e.g. `masterDataRead`, `taxpayerRead`).
+2. **`PageHeader`** — `title`, `description`, optional **`action`** wrapped in a tighter **`PermissionGate`** when the button needs a write/create permission.
+3. **Filters / toolbar** — either `DataTable`’s `filters` prop (URL-synced) or custom controls above the table (see below).
+4. **Table** — `DataTable` or `BasicDataTable`.
+5. **Sheets / dialogs** — colocated on the page; open state lifted here; wrap destructive/create UI in **`PermissionGate`** when permissions differ from read.
+
+Thin **`app/(dashboard)/admin/**/page.tsx`** routes import one feature page component only.
+
+## When to use `DataTable` (`components/data-table/data-table.tsx`)
+
+Use when the list API is **paginated** (`PaginatedListResponse`) and you want:
+
+- **URL-synced** page size, page index, and filters (`DataTableFilterConfig`)
+- **`queryKey` prefix + list params** handled consistently for TanStack Query
+
+Pass **`queryFn`** that accepts **`DataTableFetchParams`** (remember the table subtracts 1 from `page` for 0-based APIs).
+
+**Examples:** professions list, organizations list, TIN requests.
+
+## When to use `BasicDataTable` (`components/shared/basic-data-table.tsx`)
+
+Use when:
+
+- The dataset is **small / single-page** or you fetch **one blob** (no URL pagination contract), **or**
+- You need **custom filtering** (local state + manual `useQuery` keys) that does not match `DataTable`’s URL filter model.
+
+Provide **`data`**, **`columns`**, **`isPending`**, **`isError`**, optional **`onRetry`**.
+
+**Examples:** bank accounts (custom selects + manual query key), currencies (single fetch).
+
+## Row actions
+
+Default: **`DataTableRowActions`** — **`groups`** of **`DataTableRowActionGroup`** (`id`, `label`, **`LucideIcon`**, `onSelect`, optional **`variant: "destructive"`**). Pair with **`ConfirmActionAlert`** / dialogs from **`onSelect`**. No actions → muted **`—`**. Meaningful **`subjectLabel`** for **`aria-label`**; don’t hand-roll duplicate ⋯ menus.
+
+**Exception:** When the spec needs **obvious primary actions** (e.g. approve/reject) or **prominent navigation links** in-row, use **`Button`** / **`Link`** / **`Popover`** in the cell instead of hiding them behind **`DataTableRowActions`** — see **`features/tin-requests/ui/tin-request-row-actions.tsx`**.

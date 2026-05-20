@@ -1,0 +1,35 @@
+---
+description: DRY shared primitives — UI, utilities, and reusable logic (not copy-paste)
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Shared primitives (DRY)
+
+Before **copying the same implementation** (component, formatter, loader, mapper, hook pattern), **search for an existing home** instead of paste-duping.
+
+## UI
+
+1. **`components/ui/`** — shadcn/Radix building blocks  
+2. **`components/shared/`** — composed controls (`iso-date-picker`, `form-field`, `async-command-select`, `profile-read-only-field`, …)
+
+Prefer **props or a thin wrapper** in `components/shared/` over another full Popover + Calendar (or similar) under `features/*/ui/`.
+
+## Logic and utilities
+
+1. **`features/<domain>/lib/`** — domain-owned helpers (e.g. `*/lib/async-command-select-options.ts`, display/payload helpers, `profile-patch` builders). If **two call sites in the same feature** match, extract here.  
+2. **`lib/`** (repo root) — **cross-cutting** utilities when **no single feature** should own them (`api/client`, `query-keys`, `cn`, `notify`, envelopes).
+
+Do not duplicate the same **async option loaders**, **format/normalize** functions, **Zod-shaped transforms**, or **query/mutation key helpers** — import one implementation.
+
+## Boundaries
+
+- **`features/**/ui/`** — wiring: routes, forms, permissions, composition.  
+- **`features/**/lib/`** + **`components/shared/`** + **`lib/`** — reusable, importable units.
+
+```tsx
+// ✅ GOOD — one loader; register + detail import it
+features/professions/lib/async-command-select-options.ts
+
+// ❌ BAD — identical fetch/map blocks pasted in two `.tsx` files
+```

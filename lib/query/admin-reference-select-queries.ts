@@ -2,6 +2,8 @@ import { queryOptions } from "@tanstack/react-query"
 
 import { fetchBusinessLinesReference } from "@/features/business-lines/api/business-lines-api"
 import { fetchCurrenciesReference } from "@/features/currencies/api/currencies-api"
+import { fetchOrganizationsList } from "@/features/organizations/api/organizations-api"
+import { fetchProfessionsList } from "@/features/professions/api/professions-api"
 import { fetchRegionsReference } from "@/features/regions/api/regions-api"
 import { fetchRolesList } from "@/features/roles/api/roles-api"
 import {
@@ -77,6 +79,36 @@ export function currenciesReferenceQueryOptions() {
   return queryOptions({
     queryKey: queryKeys.masterData.currenciesRef(),
     queryFn: fetchCurrenciesReference,
+    staleTime: ADMIN_REFERENCE_SELECT_STALE_MS,
+  })
+}
+
+export function professionsActiveReferenceQueryOptions() {
+  return queryOptions({
+    queryKey: queryKeys.masterData.professionsActiveRef(),
+    queryFn: async () => {
+      const res = await fetchProfessionsList({
+        page: 0,
+        size: 500,
+        isActive: true,
+      })
+      return res.data
+    },
+    staleTime: ADMIN_REFERENCE_SELECT_STALE_MS,
+  })
+}
+
+export function organizationsActiveReferenceQueryOptions() {
+  return queryOptions({
+    queryKey: queryKeys.masterData.organizationsActiveRef(),
+    queryFn: async () => {
+      const res = await fetchOrganizationsList({
+        page: 0,
+        size: 500,
+        isActive: true,
+      })
+      return res.data
+    },
     staleTime: ADMIN_REFERENCE_SELECT_STALE_MS,
   })
 }

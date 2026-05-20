@@ -62,6 +62,8 @@ export interface DataTableProps<TData, TValue = unknown> {
   filters: DataTableFilterConfig[]
   defaultPageSize?: number
   emptyMessage?: string
+  /** When set, the row is clickable and navigates client-side (e.g. profile). */
+  getRowHref?: (row: TData) => string | undefined
 }
 
 export function DataTable<TData, TValue = unknown>({
@@ -71,6 +73,7 @@ export function DataTable<TData, TValue = unknown>({
   defaultPageSize = 20,
   emptyMessage = "No records found.",
   filters,
+  getRowHref,
 }: DataTableProps<TData, TValue>) {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -212,18 +215,35 @@ export function DataTable<TData, TValue = unknown>({
                 </TableRow>
               ))
             ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => {
+                const href = getRowHref?.(row.original)
+                return (
+                  <TableRow
+                    key={row.id}
+                    className={
+                      href
+                        ? "cursor-pointer hover:bg-muted/60"
+                        : undefined
+                    }
+                    onClick={
+                      href
+                        ? () => {
+                          router.push(href)
+                        }
+                        : undefined
+                    }
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length}>

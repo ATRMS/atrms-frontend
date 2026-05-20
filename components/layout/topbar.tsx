@@ -26,6 +26,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { useAuthStore } from "@/features/authentication/store/auth-store"
+import { TopbarTinLookupGate } from "@/features/taxpayers/ui/topbar-tin-lookup"
 
 const routeLabels: Record<string, string> = {
   admin: "Administration",
@@ -36,6 +37,10 @@ const routeLabels: Record<string, string> = {
   "notification-templates": "Notification Templates",
   regions: "Regions",
   "revenue-targets": "Revenue Targets",
+  taxpayers: "Taxpayer Registry",
+  "tin-requests": "TIN Requests",
+  individuals: "Individual Taxpayers",
+  corporates: "Corporate Taxpayers",
   roles: "Roles",
   settings: "Global Settings",
   "tax-offices": "Tax Offices",
@@ -110,6 +115,9 @@ export function Topbar() {
             })}
           </BreadcrumbList>
         </Breadcrumb>
+      </div>
+      <div className="flex min-w-0 flex-1 items-center justify-end gap-3 px-2 sm:px-3">
+        <TopbarTinLookupGate />
       </div>
       <div className="flex items-center gap-2 px-4">
         <DropdownMenu>

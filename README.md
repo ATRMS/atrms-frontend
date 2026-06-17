@@ -32,7 +32,7 @@ cp .env.local.template .env.local
 
 - The browser calls the backend directly using **`NEXT_PUBLIC_API_BASE_URL`**.
 - Server-side code uses **`API_BASE_URL`** for direct calls (see [`lib/config/env.ts`](lib/config/env.ts), [`lib/api/client.ts`](lib/api/client.ts)).
-- Because the client Axios instance uses `withCredentials: true`, the backend must allow CORS **with credentials** (set `Access-Control-Allow-Credentials: true` and an explicit `Access-Control-Allow-Origin`).
+- The client Axios instance attaches a **`Authorization: Bearer`** header from the session (HttpOnly cookies stay on the Next.js origin). The backend must allow CORS from the frontend origin and permit the `Authorization` header; credential cookies are not sent cross-origin.
 
 Authoritative defaults: [`.env.local.template`](.env.local.template).
 

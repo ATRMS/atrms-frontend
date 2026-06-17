@@ -63,7 +63,7 @@ function resolveApiBaseUrl(): string {
 export const apiClient = axios.create({
   baseURL: resolveApiBaseUrl() || undefined,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true,
+  // withCredentials: true,
 })
 
 apiClient.interceptors.request.use(async (config) => {

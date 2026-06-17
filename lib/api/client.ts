@@ -9,7 +9,7 @@ import {
   refreshAuthCookies,
 } from "@/features/authentication/actions/session.actions"
 import { useAuthStore } from "@/features/authentication/store/auth-store"
-import { publicEnv } from "@/lib/config/env"
+import { publicEnv, serverEnv } from "@/lib/config/env"
 import type { ApiError } from "@/types/api"
 
 type RetriableRequestConfig = InternalAxiosRequestConfig & {
@@ -52,8 +52,16 @@ export function normaliseError(error: unknown): ApiError {
   }
 }
 
+function resolveApiBaseUrl(): string {
+  if (typeof window === "undefined") {
+    return serverEnv.apiBaseUrl || publicEnv.apiBaseUrl
+  }
+
+  return publicEnv.apiBaseUrl
+}
+
 export const apiClient = axios.create({
-  baseURL: publicEnv.apiBaseUrl || undefined,
+  baseURL: resolveApiBaseUrl() || undefined,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 })

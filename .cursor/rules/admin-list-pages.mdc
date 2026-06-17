@@ -12,7 +12,7 @@ Use this vertical rhythm unless a spec says otherwise:
 
 1. **`PermissionGate`** + **`PermissionDeniedFallback`** for the page-level read permission (e.g. `masterDataRead`, `taxpayerRead`).
 2. **`PageHeader`** — `title`, `description`, optional **`action`** wrapped in a tighter **`PermissionGate`** when the button needs a write/create permission.
-3. **Filters / toolbar** — either `DataTable`’s `filters` prop (URL-synced) or custom controls above the table (see below).
+3. **Filters / toolbar** — `DataTable` filters are URL-synced; `BasicDataTable` can use **`useUrlSyncedBasicDataTableFilters`** (shareable `?channel=…`) or **`useBasicDataTableFilters`** (local state only).
 4. **Table** — `DataTable` or `BasicDataTable`.
 5. **Sheets / dialogs** — colocated on the page; open state lifted here; wrap destructive/create UI in **`PermissionGate`** when permissions differ from read.
 
@@ -34,11 +34,11 @@ Pass **`queryFn`** that accepts **`DataTableFetchParams`** (remember the table s
 Use when:
 
 - The dataset is **small / single-page** or you fetch **one blob** (no URL pagination contract), **or**
-- You need **custom filtering** (local state + manual `useQuery` keys) that does not match `DataTable`’s URL filter model.
+- You need **custom filtering** on a non-paginated list with manual `useQuery` keys.
 
-Provide **`data`**, **`columns`**, **`isPending`**, **`isError`**, optional **`onRetry`**.
+Provide **`data`**, **`columns`**, **`isPending`**, **`isError`**, optional **`onRetry`**, and optional **`filters`** + **`useUrlSyncedBasicDataTableFilters`** / **`useBasicDataTableFilters`**.
 
-**Examples:** bank accounts (custom selects + manual query key), currencies (single fetch).
+**Examples:** notification templates (channel → API + URL), bank accounts (tax type/status → API + URL), currencies (no filters).
 
 ## Row actions
 

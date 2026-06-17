@@ -22,20 +22,14 @@ export type CorporateTaxpayersListParams = ApiListParams & {
 function normalizeCorporateTaxpayersRequestParams(
   params: CorporateTaxpayersListParams
 ): ApiListParams & {
-  taxpayerType: string
+  type: string
   status?: string
   taxOfficeId?: string
   companyType?: string
 } {
-  const {
-    status: st,
-    taxOfficeId: to,
-    companyType: ct,
-    ...rest
-  } = params
+  const { status: st, taxOfficeId: to, companyType: ct, ...rest } = params
 
-  const status =
-    typeof st === "string" && st.trim() ? st.trim() : undefined
+  const status = typeof st === "string" && st.trim() ? st.trim() : undefined
   const taxOfficeId =
     typeof to === "string" && to.trim() ? to.trim() : undefined
   const companyType =
@@ -43,7 +37,7 @@ function normalizeCorporateTaxpayersRequestParams(
 
   return {
     ...rest,
-    taxpayerType: "CORPORATE",
+    type: "CORPORATE",
     ...(status ? { status } : {}),
     ...(taxOfficeId ? { taxOfficeId } : {}),
     ...(companyType ? { companyType } : {}),

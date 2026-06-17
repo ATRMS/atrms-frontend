@@ -23,20 +23,14 @@ export type IndividualTaxpayersListParams = ApiListParams & {
 function normalizeIndividualTaxpayersRequestParams(
   params: IndividualTaxpayersListParams
 ): ApiListParams & {
-  taxpayerType: string
+  type: string
   status?: string
   taxOfficeId?: string
   professionId?: string
 } {
-  const {
-    status: st,
-    taxOfficeId: to,
-    professionId: pr,
-    ...rest
-  } = params
+  const { status: st, taxOfficeId: to, professionId: pr, ...rest } = params
 
-  const status =
-    typeof st === "string" && st.trim() ? st.trim() : undefined
+  const status = typeof st === "string" && st.trim() ? st.trim() : undefined
   const taxOfficeId =
     typeof to === "string" && to.trim() ? to.trim() : undefined
   const professionId =
@@ -44,7 +38,7 @@ function normalizeIndividualTaxpayersRequestParams(
 
   return {
     ...rest,
-    taxpayerType: "INDIVIDUAL",
+    type: "INDIVIDUAL",
     ...(status ? { status } : {}),
     ...(taxOfficeId ? { taxOfficeId } : {}),
     ...(professionId ? { professionId } : {}),

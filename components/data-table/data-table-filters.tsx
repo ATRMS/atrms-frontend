@@ -96,6 +96,56 @@ export type DataTableUrlState = {
   filterValues: Record<string, string>
 }
 
+/** Default filter values for client-state lists (no URL sync). */
+export function createDataTableFilterDefaults(
+  filters: DataTableFilterConfig[]
+): Record<string, string> {
+  const filterValues: Record<string, string> = {}
+  for (const f of filters) {
+    if (f.type === "select") {
+      filterValues[f.paramKey] = f.emptyValue ?? "__all__"
+    } else {
+      filterValues[dataTableFilterParamKey(f)] = ""
+    }
+  }
+  return filterValues
+}
+
+/** Read filter values from the URL (no page/size). */
+export function parseBasicDataTableFilterUrlState(
+  sp: URLSearchParams,
+  filters: DataTableFilterConfig[]
+): Record<string, string> {
+  return parseDataTableUrlState(sp, filters, DATA_TABLE_PAGE_SIZE_OPTIONS[0])
+    .filterValues
+}
+
+/** Write filter values to the URL (omits default page/size). */
+export function serializeBasicDataTableFilterUrlState(
+  filterValues: Record<string, string>,
+  filters: DataTableFilterConfig[]
+): string {
+  return serializeDataTableUrlState(
+    {
+      page: 1,
+      size: DATA_TABLE_PAGE_SIZE_OPTIONS[0],
+      filterValues,
+    },
+    filters,
+    DATA_TABLE_PAGE_SIZE_OPTIONS[0]
+  )
+}
+
+/** Resolved select value when building API params (`undefined` = no filter). */
+export function dataTableSelectFilterValue(
+  filterValues: Record<string, string>,
+  paramKey: string,
+  emptyValue = "__all__"
+): string | undefined {
+  const v = filterValues[paramKey] ?? emptyValue
+  return v && v !== emptyValue ? v : undefined
+}
+
 export function parseDataTableUrlState(
   sp: URLSearchParams,
   filters: DataTableFilterConfig[],

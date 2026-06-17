@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import {
   flexRender,
   getCoreRowModel,
@@ -8,6 +9,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 
+import {
+  DataTableFilters,
+  type DataTableFilterConfig,
+} from "@/components/data-table/data-table-filters"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
@@ -35,6 +40,10 @@ export type BasicDataTableProps<TData, TValue = unknown> = {
     TableOptions<TData>,
     "data" | "columns" | "getCoreRowModel"
   >
+  /** Optional filter toolbar (local state via `useBasicDataTableFilters`). */
+  filters?: DataTableFilterConfig[]
+  filterValues?: Record<string, string>
+  onFiltersPatch?: (patch: Record<string, string>) => void
 }
 
 export function BasicDataTable<TData, TValue = unknown>({
@@ -48,6 +57,9 @@ export function BasicDataTable<TData, TValue = unknown>({
   pendingSkeletonClassName = "h-[280px] w-full rounded-lg",
   className,
   tableOptions,
+  filters,
+  filterValues,
+  onFiltersPatch,
 }: BasicDataTableProps<TData, TValue>) {
   // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table returns unstable function refs by design
   const table = useReactTable({
@@ -57,12 +69,28 @@ export function BasicDataTable<TData, TValue = unknown>({
     getCoreRowModel: getCoreRowModel(),
   })
 
-  if (isPending) {
-    return <Skeleton className={pendingSkeletonClassName} />
-  }
+  const showFilters =
+    filters &&
+    filters.length > 0 &&
+    filterValues &&
+    onFiltersPatch
 
-  if (isError) {
-    return (
+  const filterBar = showFilters ? (
+    <DataTableFilters
+      filters={filters}
+      filterValues={filterValues}
+      onFiltersPatch={onFiltersPatch}
+    />
+  ) : null
+
+  const colSpan = columns.length
+
+  let tableBody: ReactNode
+
+  if (isPending) {
+    tableBody = <Skeleton className={pendingSkeletonClassName} />
+  } else if (isError) {
+    tableBody = (
       <p className="text-sm text-destructive">
         {errorMessage}{" "}
         {onRetry ? (
@@ -77,12 +105,9 @@ export function BasicDataTable<TData, TValue = unknown>({
         ) : null}
       </p>
     )
-  }
-
-  const colSpan = columns.length
-
-  return (
-    <Table className={cn(className)}>
+  } else {
+    tableBody = (
+      <Table className={cn(className)}>
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
@@ -121,6 +146,18 @@ export function BasicDataTable<TData, TValue = unknown>({
           ))
         )}
       </TableBody>
-    </Table>
+      </Table>
+    )
+  }
+
+  if (!showFilters) {
+    return tableBody
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      {filterBar}
+      {tableBody}
+    </div>
   )
 }

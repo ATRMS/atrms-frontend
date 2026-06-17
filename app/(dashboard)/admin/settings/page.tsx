@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { SystemSettingsPage } from "@/features/system-settings/ui/system-settings.page"
 
-export default function SettingsPage() {
-  return (
-    <ResourcePlaceholder
-      title="Global Settings"
-      description="Manage application-wide configuration."
-    />
-  )
+export default function AdminSettingsPage() {
+  return <SystemSettingsPage />
 }

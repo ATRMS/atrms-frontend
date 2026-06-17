@@ -8,6 +8,7 @@ import {
   Building2Icon,
   CircleDollarSignIcon,
   FileSlidersIcon,
+  FileTextIcon,
   IdCardIcon,
   KeyRoundIcon,
   LandmarkIcon,
@@ -63,12 +64,6 @@ const data = {
       title: "Dashboard",
       url: "/dashboard",
       icon: <LayoutDashboardIcon />,
-    },
-    {
-      title: "Taxpayer Registry",
-      url: "/admin/taxpayers",
-      icon: <IdCardIcon />,
-      permission: PermissionCodes.taxpayerRead,
     },
     {
       title: "Administration",
@@ -139,7 +134,13 @@ const data = {
           title: "Notification Templates",
           url: "/admin/notification-templates",
           icon: <BellIcon />,
-          permission: PermissionCodes.masterDataRead,
+          permission: PermissionCodes.systemConfig,
+        },
+        {
+          title: "Audit Trail",
+          url: "/admin/audit-logs",
+          icon: <FileTextIcon />,
+          permission: PermissionCodes.auditRead,
         },
         {
           title: "Roles",
@@ -160,6 +161,12 @@ const data = {
           permission: PermissionCodes.userRead,
         },
       ],
+    },
+    {
+      title: "Taxpayer Registry",
+      url: "/admin/taxpayers",
+      icon: <IdCardIcon />,
+      permission: PermissionCodes.taxpayerRead,
     },
   ],
 }

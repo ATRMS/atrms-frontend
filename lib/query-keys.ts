@@ -106,6 +106,26 @@ export const queryKeys = {
       [...queryKeys.taxpayers.all, "corporate", "detail", id] as const,
   },
 
+  system: {
+    all: ["system"] as const,
+    settings: () => [...queryKeys.system.all, "settings"] as const,
+  },
+
+  notificationTemplates: {
+    all: ["notification-templates"] as const,
+    lists: (channel?: string) =>
+      [...queryKeys.notificationTemplates.all, "list", channel ?? "all"] as const,
+    detail: (id: string) =>
+      [...queryKeys.notificationTemplates.all, "detail", id] as const,
+  },
+
+  auditLogs: {
+    all: ["audit-logs"] as const,
+    lists: (params: unknown) =>
+      [...queryKeys.auditLogs.all, "list", params] as const,
+    detail: (id: string) => [...queryKeys.auditLogs.all, "detail", id] as const,
+  },
+
   users: {
     /** Every query scoped under users (broad invalidation). */
     all: ["users"] as const,

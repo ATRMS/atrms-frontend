@@ -1,10 +1,5 @@
-import { ResourcePlaceholder } from "@/components/layout/resource-placeholder"
+import { NotificationTemplatesPage } from "@/features/notification-templates/ui/notification-templates.page"
 
-export default function NotificationTemplatesPage() {
-  return (
-    <ResourcePlaceholder
-      title="Notification Templates"
-      description="Manage notification templates."
-    />
-  )
+export default function AdminNotificationTemplatesPage() {
+  return <NotificationTemplatesPage />
 }

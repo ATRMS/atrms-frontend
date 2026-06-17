@@ -26,6 +26,24 @@ export const apiPaths = {
   permissions: {
     collection: "/permissions",
   },
+  system: {
+    settings: "/system/settings",
+    testMail: "/system/settings/test-mail",
+    testSms: "/system/settings/test-sms",
+  },
+  notificationTemplates: {
+    collection: "/system/notification-templates",
+    detail: (id: string) =>
+      `/system/notification-templates/${encodeURIComponent(id)}` as const,
+    status: (id: string) =>
+      `/system/notification-templates/${encodeURIComponent(id)}/status` as const,
+    preview: (id: string) =>
+      `/system/notification-templates/${encodeURIComponent(id)}/preview` as const,
+  },
+  auditLogs: {
+    collection: "/audit-logs",
+    detail: (id: string) => `/audit-logs/${encodeURIComponent(id)}` as const,
+  },
   taxpayers: {
     tinRequests: "/tin-requests",
     tinRequestApprove: (id: string) =>
@@ -39,8 +57,7 @@ export const apiPaths = {
     corporateDetail: (id: string) =>
       `/taxpayers/corporates/${encodeURIComponent(id)}` as const,
     /** Canonical taxpayer resource (e.g. DELETE per epic). */
-    resource: (id: string) =>
-      `/taxpayers/${encodeURIComponent(id)}` as const,
+    resource: (id: string) => `/taxpayers/${encodeURIComponent(id)}` as const,
     status: (id: string) =>
       `/taxpayers/${encodeURIComponent(id)}/status` as const,
   },

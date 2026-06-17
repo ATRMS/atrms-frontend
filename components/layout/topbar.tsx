@@ -35,6 +35,7 @@ const routeLabels: Record<string, string> = {
   currencies: "Currencies",
   dashboard: "Dashboard",
   "notification-templates": "Notification Templates",
+  "audit-logs": "Audit Trail",
   regions: "Regions",
   "revenue-targets": "Revenue Targets",
   taxpayers: "Taxpayer Registry",

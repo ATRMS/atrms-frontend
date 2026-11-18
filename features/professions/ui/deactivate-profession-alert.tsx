@@ -25,8 +25,8 @@ export function DeactivateProfessionAlert({
       title="Deactivate profession?"
       description={
         <>
-          Deactivate {professionName}? It will no longer appear in new individual
-          registration forms.
+          Deactivate {professionName}? It will no longer appear in new
+          individual registration forms.
         </>
       }
       confirmLabel="Deactivate"

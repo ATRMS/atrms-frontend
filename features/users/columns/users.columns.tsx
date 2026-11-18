@@ -33,9 +33,7 @@ export const usersColumns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "username",
     header: "Username",
-    cell: ({ row }) => (
-      <span className="text-sm">{row.original.username}</span>
-    ),
+    cell: ({ row }) => <span className="text-sm">{row.original.username}</span>,
   },
   {
     accessorKey: "phone",

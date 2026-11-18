@@ -25,8 +25,8 @@ export function DeactivateBankAccountAlert({
       title="Deactivate bank account?"
       description={
         <>
-          Deactivate {accountLabel}? It will no longer be offered for new payment
-          routing until reactivated.
+          Deactivate {accountLabel}? It will no longer be offered for new
+          payment routing until reactivated.
         </>
       }
       confirmLabel="Deactivate"

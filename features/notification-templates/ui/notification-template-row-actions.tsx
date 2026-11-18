@@ -21,7 +21,7 @@ export function NotificationTemplateRowActions({
   const deactivateMutation = useDeactivateNotificationTemplateMutation()
 
   const canConfig = useAuthStore((s) =>
-    s.hasPermission(PermissionCodes.systemConfig)
+    s.hasPermission(PermissionCodes.systemWrite)
   )
 
   const items = []

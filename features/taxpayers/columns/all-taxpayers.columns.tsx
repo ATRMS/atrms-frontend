@@ -53,9 +53,7 @@ export const allTaxpayersColumns: ColumnDef<UnifiedTaxpayerListItem>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <TaxpayerStatusBadge status={row.original.status} />
-    ),
+    cell: ({ row }) => <TaxpayerStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "registeredAt",

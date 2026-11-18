@@ -107,7 +107,7 @@ export function TinRequestRowActions({ row }: { row: TinRequestListItem }) {
           <p className="text-xs font-medium text-muted-foreground">
             Rejection reason
           </p>
-          <p className="mt-1 whitespace-pre-wrap text-sm">
+          <p className="mt-1 text-sm whitespace-pre-wrap">
             {row.rejectedReason}
           </p>
         </PopoverContent>

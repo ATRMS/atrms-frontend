@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils"
 
 export function CurrencyDefaultStar({ isDefault }: { isDefault: boolean }) {
   return (
-    <span className="inline-flex justify-center" aria-label={isDefault ? "Default currency" : "Not default"}>
+    <span
+      className="inline-flex justify-center"
+      aria-label={isDefault ? "Default currency" : "Not default"}
+    >
       <StarIcon
         className={cn(
           "size-4",

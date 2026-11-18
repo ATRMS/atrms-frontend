@@ -22,7 +22,9 @@ import { queryKeys } from "@/lib/query-keys"
 export function RevenueTargetsPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const { data: taxTypes = [] } = useQuery(taxTypesActiveReferenceQueryOptions())
+  const { data: taxTypes = [] } = useQuery(
+    taxTypesActiveReferenceQueryOptions()
+  )
 
   const filters = useMemo<DataTableFilterConfig[]>(
     () => [
@@ -62,9 +64,7 @@ export function RevenueTargetsPage() {
   return (
     <PermissionGate
       permission={PermissionCodes.masterDataRead}
-      fallback={
-        <PermissionDeniedFallback resourceLabel="revenue targets" />
-      }
+      fallback={<PermissionDeniedFallback resourceLabel="revenue targets" />}
     >
       <div className="flex flex-col gap-6">
         <PageHeader

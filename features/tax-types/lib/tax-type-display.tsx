@@ -32,7 +32,11 @@ export const TAX_TYPE_AUTHORITY_LABELS: Record<
   JOINT: "Joint",
 }
 
-export function TaxTypeCategoryBadge({ category }: { category: TaxTypeCategory }) {
+export function TaxTypeCategoryBadge({
+  category,
+}: {
+  category: TaxTypeCategory
+}) {
   return (
     <Badge variant="outline" className="font-normal">
       {TAX_TYPE_CATEGORY_LABELS[category]}
@@ -40,7 +44,11 @@ export function TaxTypeCategoryBadge({ category }: { category: TaxTypeCategory }
   )
 }
 
-export function TaxTypeRateTypeBadge({ rateType }: { rateType: TaxTypeRateType }) {
+export function TaxTypeRateTypeBadge({
+  rateType,
+}: {
+  rateType: TaxTypeRateType
+}) {
   return (
     <Badge variant="secondary" className="font-normal">
       {TAX_TYPE_RATE_TYPE_LABELS[rateType]}
@@ -62,7 +70,10 @@ export function TaxTypeAuthorityBadge({
 
 export function TaxTypeStatusBadge({ isActive }: { isActive: boolean }) {
   return (
-    <Badge variant={isActive ? "success" : "destructive"} className="font-normal">
+    <Badge
+      variant={isActive ? "success" : "destructive"}
+      className="font-normal"
+    >
       {isActive ? "Active" : "Inactive"}
     </Badge>
   )

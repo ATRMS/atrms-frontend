@@ -74,7 +74,10 @@ const RESULT_OPTIONS = [
   { value: "PARTIAL", label: "Partial" },
 ] as const
 
-const actorQueryKeyPrefix = [...queryKeys.users.all, "audit-actor-select"] as const
+const actorQueryKeyPrefix = [
+  ...queryKeys.users.all,
+  "audit-actor-select",
+] as const
 
 type FilterDraft = {
   from: string
@@ -85,18 +88,13 @@ type FilterDraft = {
   result: string
 }
 
-function buildListParams(
-  draft: FilterDraft,
-  page: number
-): AuditLogParams {
+function buildListParams(draft: FilterDraft, page: number): AuditLogParams {
   return {
     from: draft.from,
     to: draft.to,
     page: Math.max(0, page - 1),
     size: PAGE_SIZE,
-    ...(draft.entityType !== "__all__"
-      ? { entityType: draft.entityType }
-      : {}),
+    ...(draft.entityType !== "__all__" ? { entityType: draft.entityType } : {}),
     ...(draft.action !== "__all__"
       ? { action: draft.action as AuditLogParams["action"] }
       : {}),
@@ -121,10 +119,7 @@ export function AuditLogsPage() {
   const [page, setPage] = useState(1)
 
   const rangeInvalid = auditDateRangeExceedsMaxDays(draft.from, draft.to)
-  const rangeOrderInvalid =
-    draft.from &&
-    draft.to &&
-    draft.from > draft.to
+  const rangeOrderInvalid = draft.from && draft.to && draft.from > draft.to
 
   const listQuery = useQuery({
     queryKey: queryKeys.auditLogs.lists(submitted ?? {}),

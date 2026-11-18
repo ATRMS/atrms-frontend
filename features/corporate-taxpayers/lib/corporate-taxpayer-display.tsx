@@ -44,9 +44,7 @@ export function CompanyTypeBadge({
   companyType: CorporateCompanyType | string | null | undefined
 }) {
   if (!companyType) {
-    return (
-      <span className="text-sm text-muted-foreground">—</span>
-    )
+    return <span className="text-sm text-muted-foreground">—</span>
   }
 
   return <Badge variant="secondary">{companyTypeLabel(companyType)}</Badge>

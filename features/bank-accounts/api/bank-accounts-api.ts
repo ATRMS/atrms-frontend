@@ -10,6 +10,7 @@ import type { ApiResponse } from "@/types/api"
 
 export type BankAccountsListParams = {
   taxTypeId?: string
+  revenueHeadId?: string
   isActive?: boolean
 }
 
@@ -19,6 +20,7 @@ function normalizeListParams(
   if (!params) return {}
   const q: Record<string, unknown> = {}
   if (params.taxTypeId) q.taxTypeId = params.taxTypeId
+  if (params.revenueHeadId) q.revenueHeadId = params.revenueHeadId
   if (params.isActive !== undefined) q.isActive = params.isActive
   return q
 }
@@ -36,8 +38,8 @@ export async function fetchBankAccountsList(
 
 export async function createBankAccount(
   payload: BankAccountCreatePayload
-): Promise<BankAccountListItem> {
-  const res = await apiClient.post<ApiResponse<BankAccountListItem>>(
+): Promise<string> {
+  const res = await apiClient.post<ApiResponse<string>>(
     apiPaths.masterData.bankAccounts,
     payload
   )

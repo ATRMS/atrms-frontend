@@ -128,8 +128,10 @@ export function PermissionPickerPanels({
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <span className="truncate">{formatPermissionModuleLabel(mod)}</span>
-                <span className="shrink-0 tabular-nums text-xs text-muted-foreground">
+                <span className="truncate">
+                  {formatPermissionModuleLabel(mod)}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
                   {sel}/{list.length}
                 </span>
               </button>

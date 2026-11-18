@@ -33,8 +33,8 @@ export function DeleteRoleAlert({
             <span className="font-mono text-muted-foreground">
               ({role.code})
             </span>
-            ? This cannot be undone. If the role is still assigned to users,
-            the server may reject the request until they are reassigned.
+            ? This cannot be undone. If the role is still assigned to users, the
+            server may reject the request until they are reassigned.
           </>
         ) : null
       }

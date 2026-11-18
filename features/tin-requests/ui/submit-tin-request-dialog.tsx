@@ -91,10 +91,7 @@ export function SubmitTinRequestDialog({
               label="Taxpayer type"
               required
               render={({ field, fieldState }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger
                     id={field.name}
                     aria-invalid={fieldState.invalid}

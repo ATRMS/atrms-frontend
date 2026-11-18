@@ -188,7 +188,9 @@ export function EditUserSheet({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value={OPTIONAL_SELECT_NONE}>None</SelectItem>
+                        <SelectItem value={OPTIONAL_SELECT_NONE}>
+                          None
+                        </SelectItem>
                         {USER_TITLE_VALUES.map((titleOption) => (
                           <SelectItem key={titleOption} value={titleOption}>
                             {titleOption}
@@ -326,7 +328,9 @@ export function EditUserSheet({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value={OPTIONAL_SELECT_NONE}>None</SelectItem>
+                        <SelectItem value={OPTIONAL_SELECT_NONE}>
+                          None
+                        </SelectItem>
                         {activeTaxOffices.map((office) => (
                           <SelectItem key={office.id} value={office.id}>
                             {office.name}

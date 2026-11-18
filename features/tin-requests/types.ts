@@ -1,10 +1,6 @@
 export type TinRequestTaxpayerType = "INDIVIDUAL" | "CORPORATE"
 
-export type TinRequestStatus =
-  | "PENDING"
-  | "APPROVED"
-  | "REJECTED"
-  | "CANCELLED"
+export type TinRequestStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED"
 
 export interface TinRequestListItem {
   id: string

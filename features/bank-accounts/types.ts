@@ -1,11 +1,12 @@
 export interface BankAccountListItem {
   id: string
   bankName: string
-  bankCode: string
+  bankCode: string | null
   accountName: string
   accountNumber: string
   currencyId: string
-  taxTypeId: string
+  taxTypeId: string | null
+  revenueHeadId: string | null
   isActive: boolean
 }
 
@@ -16,6 +17,7 @@ export type BankAccountCreatePayload = {
   accountNumber: string
   currencyId: string
   taxTypeId: string
+  revenueHeadId?: string
 }
 
 export type BankAccountUpdatePayload = {
@@ -23,4 +25,7 @@ export type BankAccountUpdatePayload = {
   accountNumber: string
   bankName: string
   bankCode: string
+  currencyId: string
+  taxTypeId: string
+  revenueHeadId?: string
 }

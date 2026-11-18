@@ -2,9 +2,8 @@ import { apiClient } from "@/lib/api/client"
 import { apiPaths } from "@/lib/api/endpoints"
 import { unwrapApiPayload } from "@/lib/api/envelope"
 import type {
-  BusinessLineListItem,
-  CreateBusinessLinePayload,
-  UpdateBusinessLinePayload,
+  BusinessLine,
+  BusinessLineWritePayload,
 } from "@/features/business-lines/types"
 import type {
   ApiListParams,
@@ -13,83 +12,44 @@ import type {
 } from "@/types/api"
 
 export type BusinessLinesListParams = ApiListParams & {
-  /** Filter by active flag (`true` / `false`), when supported by the list endpoint. */
-  isActive?: boolean | string
+  active?: boolean
+  sectorId?: string
 }
-
-function normalizeBusinessLinesRequestParams(
-  params: BusinessLinesListParams
-): ApiListParams & { isActive?: boolean } {
-  const { isActive: raw, ...rest } = params
-
-  let isActive: boolean | undefined
-  if (typeof raw === "boolean") {
-    isActive = raw
-  } else if (raw === "true") {
-    isActive = true
-  } else if (raw === "false") {
-    isActive = false
-  }
-
-  return {
-    ...rest,
-    ...(isActive !== undefined ? { isActive } : {}),
-  }
-}
-
 export async function fetchBusinessLinesList(
   params: BusinessLinesListParams
-): Promise<PaginatedListResponse<BusinessLineListItem>> {
-  const res = await apiClient.get<PaginatedListResponse<BusinessLineListItem>>(
-    apiPaths.masterData.businessLines,
-    {
-      params: normalizeBusinessLinesRequestParams(params),
-    }
-  )
-
-  return res.data
+): Promise<PaginatedListResponse<BusinessLine>> {
+  return (
+    await apiClient.get<PaginatedListResponse<BusinessLine>>(
+      apiPaths.masterData.businessLines,
+      { params }
+    )
+  ).data
 }
-
-/** Wide active-only fetch for reference comboboxes (admin prefetch). */
-export async function fetchBusinessLinesReference(): Promise<
-  BusinessLineListItem[]
-> {
-  const res = await fetchBusinessLinesList({
-    page: 0,
-    size: 500,
-    isActive: true,
-  })
-
-  return res.data
+export async function fetchBusinessLinesReference(): Promise<BusinessLine[]> {
+  return (await fetchBusinessLinesList({ page: 0, size: 100 })).data
 }
-
-export async function createBusinessLine(
-  payload: CreateBusinessLinePayload
-): Promise<BusinessLineListItem> {
-  const res = await apiClient.post<ApiResponse<BusinessLineListItem>>(
-    apiPaths.masterData.businessLines,
-    payload
-  )
-
-  return unwrapApiPayload(res.data)
+export async function saveBusinessLine(
+  id: string | null,
+  payload: BusinessLineWritePayload
+): Promise<BusinessLine> {
+  const response = id
+    ? await apiClient.put<ApiResponse<BusinessLine>>(
+        apiPaths.masterData.businessLineDetail(id),
+        payload
+      )
+    : await apiClient.post<ApiResponse<BusinessLine>>(
+        apiPaths.masterData.businessLines,
+        payload
+      )
+  return unwrapApiPayload(response.data)
 }
-
-export async function updateBusinessLine(
+export async function setBusinessLineActive(
   id: string,
-  payload: UpdateBusinessLinePayload
-): Promise<BusinessLineListItem> {
-  const res = await apiClient.put<ApiResponse<BusinessLineListItem>>(
-    apiPaths.masterData.businessLineDetail(id),
-    payload
+  active: boolean
+): Promise<void> {
+  await apiClient.patch(
+    active
+      ? apiPaths.masterData.businessLineActivate(id)
+      : apiPaths.masterData.businessLineDeactivate(id)
   )
-
-  return unwrapApiPayload(res.data)
-}
-
-export async function activateBusinessLine(id: string): Promise<void> {
-  await apiClient.patch(apiPaths.masterData.businessLineActivate(id))
-}
-
-export async function deactivateBusinessLine(id: string): Promise<void> {
-  await apiClient.patch(apiPaths.masterData.businessLineDeactivate(id))
 }

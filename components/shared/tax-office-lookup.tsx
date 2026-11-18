@@ -6,11 +6,7 @@ import { useMemo } from "react"
 import { taxOfficesActiveReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
 
 /** Resolves a tax office id to `code — name` using the active tax-office reference query. */
-export function TaxOfficeLookup({
-  taxOfficeId,
-}: {
-  taxOfficeId: string
-}) {
+export function TaxOfficeLookup({ taxOfficeId }: { taxOfficeId: string }) {
   const { data: offices = [] } = useQuery(
     taxOfficesActiveReferenceQueryOptions()
   )

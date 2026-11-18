@@ -11,13 +11,8 @@ export function useRejectTinRequestMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({
-      id,
-      reason,
-    }: {
-      id: string
-      reason: string
-    }) => rejectTinRequest(id, { reason }),
+    mutationFn: ({ id, reason }: { id: string; reason: string }) =>
+      rejectTinRequest(id, { reason }),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.taxpayers.tinRequestsRoot(),

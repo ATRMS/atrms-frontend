@@ -17,6 +17,8 @@ export default async function AdminLayout({
   await prefetchAdminReferenceSelectQueries(queryClient)
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {children}
+    </HydrationBoundary>
   )
 }

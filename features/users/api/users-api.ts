@@ -12,7 +12,11 @@ import type {
   UserListItem,
   UserTransferHistoryItem,
 } from "@/features/users/types"
-import type { ApiListParams, ApiResponse, PaginatedListResponse } from "@/types/api"
+import type {
+  ApiListParams,
+  ApiResponse,
+  PaginatedListResponse,
+} from "@/types/api"
 
 export type UsersListParams = ApiListParams & {
   roleId?: string

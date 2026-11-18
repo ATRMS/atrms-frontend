@@ -54,8 +54,7 @@ export function TaxpayerStatusDropdown({
   }
 
   const requiresReason =
-    pendingStatus !== null &&
-    taxpayerStatusChangeRequiresReason(pendingStatus)
+    pendingStatus !== null && taxpayerStatusChangeRequiresReason(pendingStatus)
 
   function closeConfirm() {
     setPendingStatus(null)
@@ -126,8 +125,8 @@ export function TaxpayerStatusDropdown({
                 Change status to {taxpayerStatusLabel(pendingStatus)}?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be easily reversed. Provide a reason for
-                this status change.
+                This action cannot be easily reversed. Provide a reason for this
+                status change.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="flex flex-col gap-2">

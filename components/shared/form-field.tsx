@@ -19,18 +19,11 @@ type SharedFormFieldProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
   TTransformedValues extends FieldValues = TFieldValues,
-> = Omit<
-  ControllerProps<TFieldValues, TName, TTransformedValues>,
-  "render"
-> & {
+> = Omit<ControllerProps<TFieldValues, TName, TTransformedValues>, "render"> & {
   description?: ReactNode
   label: string
   required?: boolean
-  render: ControllerProps<
-    TFieldValues,
-    TName,
-    TTransformedValues
-  >["render"]
+  render: ControllerProps<TFieldValues, TName, TTransformedValues>["render"]
 }
 
 export function FormField<

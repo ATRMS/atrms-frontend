@@ -2,17 +2,19 @@ import "server-only"
 
 import type { ApiResponse } from "@/types/api"
 import type {
-  AuthResponse,
   AuthSessionPayload,
+  LoginResponse,
+  LanguagesResponse,
+  Me,
+  RefreshResponse,
 } from "@/features/authentication/types"
-import { extractPermissionsFromAccessToken } from "@/features/authentication/lib/access-token-permissions"
 import {
-  applyAuthCookies,
+  applyAccessCookies,
+  applyLoginCookies,
   clearAuthCookies,
   getAccessTokenFromCookies,
   getRefreshTokenFromCookies,
   isAccessTokenStale,
-  readSessionPayloadFromCookies,
 } from "@/lib/config/cookies"
 import { apiPaths } from "@/lib/api/endpoints"
 import { unwrapApiPayload } from "@/lib/api/envelope"
@@ -49,16 +51,18 @@ async function parseJson(res: Response): Promise<unknown> {
   }
 }
 
-async function fetchAuthResponse(
+async function requestAuthPayload<T>(
   path: string,
-  init: RequestInit
-): Promise<AuthResponse> {
+  init: RequestInit,
+  language?: string
+): Promise<T> {
   const base = assertServerApiBaseUrl()
 
   const res = await fetch(`${base}${path}`, {
     ...init,
     headers: {
       "Content-Type": "application/json",
+      ...(language ? { "Accept-Language": language } : {}),
       ...init.headers,
     },
   })
@@ -69,9 +73,71 @@ async function fetchAuthResponse(
     throw new Error(extractErrorMessage(json))
   }
 
-  return unwrapApiPayload<AuthResponse>(
-    json as ApiResponse<AuthResponse> | AuthResponse
+  return unwrapApiPayload<T>(json as ApiResponse<T> | T)
+}
+
+async function selectedLanguage(): Promise<string | undefined> {
+  const store = await cookies()
+  return store.get("atrms_lang")?.value
+}
+
+export async function fetchMe(accessToken: string): Promise<Me> {
+  return requestAuthPayload<Me>(apiPaths.auth.me, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+}
+
+export async function fetchLanguages(
+  accessToken: string
+): Promise<LanguagesResponse> {
+  return requestAuthPayload<LanguagesResponse>(apiPaths.languages, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  })
+}
+
+export async function changePasswordRequest(
+  accessToken: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<void> {
+  await requestAuthPayload<null>(apiPaths.auth.changePassword, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  })
+}
+
+export async function forgotPasswordRequest(email: string): Promise<void> {
+  await requestAuthPayload<unknown>(
+    apiPaths.auth.forgotPassword,
+    { method: "POST", body: JSON.stringify({ email }) },
+    await selectedLanguage()
   )
+}
+
+export async function resetPasswordRequest(payload: {
+  userId: string
+  token: string
+  newPassword: string
+}): Promise<void> {
+  await requestAuthPayload<unknown>(
+    apiPaths.auth.resetPassword,
+    { method: "POST", body: JSON.stringify(payload) },
+    await selectedLanguage()
+  )
+}
+
+export async function updateLanguageRequest(
+  accessToken: string,
+  language: string
+): Promise<void> {
+  await requestAuthPayload<unknown>(apiPaths.users.language, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: JSON.stringify({ language }),
+  })
 }
 
 /**
@@ -82,32 +148,46 @@ export async function loginRequest(
   email: string,
   password: string
 ): Promise<AuthSessionPayload> {
-  const auth = await fetchAuthResponse(apiPaths.auth.login, {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  })
+  const auth = await requestAuthPayload<LoginResponse>(
+    apiPaths.auth.login,
+    {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    },
+    await selectedLanguage()
+  )
 
   const store = await cookies()
-  applyAuthCookies(store, auth)
+  applyLoginCookies(store, auth)
+  const me = await fetchMe(auth.accessToken)
 
   return {
-    user: auth.user,
-    mustChangePassword: auth.mustChangePassword,
-    permissions: extractPermissionsFromAccessToken(auth.accessToken),
+    user: {
+      ...auth.user,
+      fullName: me.user.fullName,
+      roleScopes: me.user.roles,
+    },
+    mustChangePassword: me.user.mustChangePassword,
+    permissions: me.permissions,
   }
 }
 
 export async function refreshTokensRequest(
   refreshToken: string
-): Promise<AuthResponse> {
-  return fetchAuthResponse(apiPaths.auth.refresh, {
-    method: "POST",
-    body: JSON.stringify({ refreshToken }),
-  })
+): Promise<RefreshResponse> {
+  return requestAuthPayload<RefreshResponse>(
+    apiPaths.auth.refresh,
+    {
+      method: "POST",
+      body: JSON.stringify({ refreshToken }),
+    },
+    await selectedLanguage()
+  )
 }
 
 export async function logoutUpstreamRequest(
-  accessToken: string
+  accessToken: string,
+  refreshToken: string
 ): Promise<void> {
   const base = assertServerApiBaseUrl()
 
@@ -117,6 +197,7 @@ export async function logoutUpstreamRequest(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ refreshToken }),
   }).catch(() => undefined)
 }
 
@@ -135,7 +216,7 @@ export async function ensureAuthCookiesValid(): Promise<boolean> {
   if (!access || isAccessTokenStale(store)) {
     try {
       const auth = await refreshTokensRequest(refresh)
-      applyAuthCookies(store, auth)
+      applyAccessCookies(store, auth)
     } catch {
       clearAuthCookies(store)
       return false
@@ -151,6 +232,26 @@ export async function readSessionFromCookieJar(): Promise<AuthSessionPayload | n
   if (!ok) return null
 
   const store = await cookies()
+  const accessToken = getAccessTokenFromCookies(store)
+  const rawUser = store.get("atrms_user")?.value
 
-  return readSessionPayloadFromCookies(store)
+  if (!accessToken || !rawUser) return null
+
+  try {
+    const loginUser = JSON.parse(rawUser) as LoginResponse["user"]
+    const me = await fetchMe(accessToken)
+
+    return {
+      user: {
+        ...loginUser,
+        fullName: me.user.fullName,
+        roleScopes: me.user.roles,
+      },
+      mustChangePassword: me.user.mustChangePassword,
+      permissions: me.permissions,
+    }
+  } catch {
+    clearAuthCookies(store)
+    return null
+  }
 }

@@ -46,13 +46,13 @@ export function UserCreatedPasswordDialog({
           </DialogDescription>
         </DialogHeader>
         {temporaryPassword ? (
-          <div className="break-all rounded-lg border bg-muted/40 px-3 py-2 font-mono text-sm">
+          <div className="rounded-lg border bg-muted/40 px-3 py-2 font-mono text-sm break-all">
             {temporaryPassword}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No temporary password was returned. If email is configured, the
-            user may receive login instructions by mail.
+            No temporary password was returned. If email is configured, the user
+            may receive login instructions by mail.
           </p>
         )}
         <DialogFooter showCloseButton={false}>

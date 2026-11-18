@@ -17,7 +17,9 @@ import { notify } from "@/lib/notify"
 
 function EntityIdCell({ entityId }: { entityId: string }) {
   const short =
-    entityId.length > 12 ? `${entityId.slice(0, 8)}…${entityId.slice(-4)}` : entityId
+    entityId.length > 12
+      ? `${entityId.slice(0, 8)}…${entityId.slice(-4)}`
+      : entityId
 
   return (
     <div className="flex items-center gap-1">
@@ -80,9 +82,7 @@ export const auditLogsColumns: ColumnDef<AuditLogListItem>[] = [
     header: "Actor",
     cell: ({ row }) => (
       <span className="text-sm">
-        {row.original.actorUsername?.trim() ||
-          row.original.actorId ||
-          "—"}
+        {row.original.actorUsername?.trim() || row.original.actorId || "—"}
       </span>
     ),
   },

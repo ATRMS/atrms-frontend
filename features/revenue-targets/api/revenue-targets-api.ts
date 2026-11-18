@@ -21,8 +21,7 @@ function normalizeRevenueTargetsRequestParams(
 ): ApiListParams & { taxTypeId?: string; fiscalYear?: number } {
   const { taxTypeId: tid, fiscalYear: fyRaw, ...rest } = params
 
-  const taxTypeId =
-    typeof tid === "string" ? tid.trim() : undefined
+  const taxTypeId = typeof tid === "string" ? tid.trim() : undefined
 
   let fiscalYear: number | undefined
   if (typeof fyRaw === "number" && Number.isFinite(fyRaw)) {
@@ -39,11 +38,12 @@ function normalizeRevenueTargetsRequestParams(
 export async function fetchRevenueTargetsList(
   params: RevenueTargetsListParams
 ): Promise<PaginatedListResponse<RevenueTargetListItem>> {
-  const res = await apiClient.get<
-    PaginatedListResponse<RevenueTargetListItem>
-  >(apiPaths.masterData.revenueTargets, {
-    params: normalizeRevenueTargetsRequestParams(params),
-  })
+  const res = await apiClient.get<PaginatedListResponse<RevenueTargetListItem>>(
+    apiPaths.masterData.revenueTargets,
+    {
+      params: normalizeRevenueTargetsRequestParams(params),
+    }
+  )
 
   return res.data
 }

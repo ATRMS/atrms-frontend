@@ -11,8 +11,6 @@ export function systemSettingsToFormValues(
   data: SystemSettings
 ): SystemSettingsFormInputValues {
   return {
-    taxAuthorityId: data.taxAuthorityId ?? "",
-    taxAuthorityName: data.taxAuthorityName ?? "",
     sessionTimeoutMinutes: data.sessionTimeoutMinutes,
     failedLoginAttempts: data.failedLoginAttempts,
     passwordExpirationDays: data.passwordExpirationDays,
@@ -41,8 +39,6 @@ export function formValuesToUpdatePayload(
   }
 ): UpdateSystemSettingsPayload {
   const payload: UpdateSystemSettingsPayload = {
-    taxAuthorityId: values.taxAuthorityId.trim() || null,
-    taxAuthorityName: values.taxAuthorityName.trim() || null,
     sessionTimeoutMinutes: values.sessionTimeoutMinutes,
     failedLoginAttempts: values.failedLoginAttempts,
     passwordExpirationDays: values.passwordExpirationDays,

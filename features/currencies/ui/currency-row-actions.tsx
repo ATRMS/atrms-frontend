@@ -10,7 +10,11 @@ import { CurrencyUpsertDialog } from "@/features/currencies/ui/currency-upsert-d
 import { SetDefaultCurrencyAlert } from "@/features/currencies/ui/set-default-currency-alert"
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions"
 
-export function CurrencyRowActions({ currency }: { currency: CurrencyListItem }) {
+export function CurrencyRowActions({
+  currency,
+}: {
+  currency: CurrencyListItem
+}) {
   const [editOpen, setEditOpen] = useState(false)
   const [setDefaultOpen, setSetDefaultOpen] = useState(false)
 

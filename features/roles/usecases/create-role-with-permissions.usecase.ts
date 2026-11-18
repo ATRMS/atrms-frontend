@@ -2,10 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import {
-  createRole,
-  putRolePermissions,
-} from "@/features/roles/api/roles-api"
+import { createRole, putRolePermissions } from "@/features/roles/api/roles-api"
 import type { CreateRoleDetailsValues } from "@/features/roles/schemas"
 import { normaliseError } from "@/lib/api/client"
 import { notify } from "@/lib/notify"

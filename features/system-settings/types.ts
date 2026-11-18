@@ -1,7 +1,5 @@
 export type SystemSettings = {
   id: string
-  taxAuthorityId: string | null
-  taxAuthorityName: string | null
   sessionTimeoutMinutes: number
   failedLoginAttempts: number
   passwordExpirationDays: number
@@ -13,8 +11,6 @@ export type SystemSettings = {
 }
 
 export type UpdateSystemSettingsPayload = {
-  taxAuthorityId?: string | null
-  taxAuthorityName?: string | null
   sessionTimeoutMinutes: number
   failedLoginAttempts: number
   passwordExpirationDays: number

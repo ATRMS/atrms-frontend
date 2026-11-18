@@ -6,6 +6,7 @@ import { format, isValid, parseISO } from "date-fns"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
+import { fetchCorporateTaxpayerById } from "@/features/corporate-taxpayers/api/corporate-taxpayers-api"
 
 import { PermissionCodes } from "@/features/authentication/lib/permission-codes"
 import { fetchIndividualTaxpayerById } from "@/features/individual-taxpayers/api/individual-taxpayers-api"
@@ -28,7 +29,7 @@ import { useDeleteTaxpayerMutation } from "@/features/individual-taxpayers/useca
 import { useUpdateIndividualTaxpayerMutation } from "@/features/individual-taxpayers/usecases/update-individual-taxpayer.usecase"
 import { TaxpayerDeleteConfirmAlert } from "@/features/taxpayers/ui/taxpayer-delete-confirm-alert"
 import { TaxpayerStatusDropdown } from "@/features/taxpayers/ui/taxpayer-status-dropdown"
-import { loadActiveOrganizationsAsyncOptions } from "@/features/organizations/lib/async-command-select-options"
+import { loadCorporateEmployerOptions } from "@/features/taxpayers/lib/corporate-employer-select"
 import { loadActiveProfessionsAsyncOptions } from "@/features/professions/lib/async-command-select-options"
 import { BackLink } from "@/components/shared/back-link"
 import { AsyncCommandSelect } from "@/components/shared/async-command-select"
@@ -52,7 +53,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Textarea } from "@/components/ui/textarea"
 import { queryKeys } from "@/lib/query-keys"
 import {
-  organizationsActiveReferenceQueryOptions,
   professionsActiveReferenceQueryOptions,
   taxOfficesActiveReferenceQueryOptions,
 } from "@/lib/query/admin-reference-select-queries"
@@ -63,7 +63,9 @@ function fullDisplayName(d: IndividualTaxpayerDetail): string {
   return parts.join(" ").replace(/\s+/g, " ").trim()
 }
 
-function detailToFormValues(d: IndividualTaxpayerDetail): IndividualProfileEditFormValues {
+function detailToFormValues(
+  d: IndividualTaxpayerDetail
+): IndividualProfileEditFormValues {
   return {
     firstName: d.firstName,
     middleName: d.middleName?.trim() ?? "",
@@ -101,9 +103,13 @@ function DetailLoaded({
     professionsActiveReferenceQueryOptions()
   )
 
-  const { data: organizations = [] } = useQuery(
-    organizationsActiveReferenceQueryOptions()
-  )
+  const employerQuery = useQuery({
+    queryKey: queryKeys.taxpayers.corporateTaxpayerDetail(
+      detail.employerId ?? ""
+    ),
+    queryFn: () => fetchCorporateTaxpayerById(detail.employerId ?? ""),
+    enabled: Boolean(detail.employerId),
+  })
 
   const { data: activeTaxOffices = [], isPending: taxOfficesPending } =
     useQuery(taxOfficesActiveReferenceQueryOptions())
@@ -122,14 +128,9 @@ function DetailLoaded({
     return p ? `${p.code} — ${p.name}` : undefined
   }, [detail.professionId, professions])
 
-  const employerLabel = useMemo(() => {
-    const id = detail.employerId?.trim()
-    if (!id) return undefined
-    const o = organizations.find((x) => x.id === id)
-    return o
-      ? `${o.regNumber ? `${o.regNumber} — ` : ""}${o.name}`
-      : undefined
-  }, [detail.employerId, organizations])
+  const employerLabel = employerQuery.data
+    ? `${employerQuery.data.companyName} — ${employerQuery.data.tin}`
+    : undefined
 
   const registeredFmt = useMemo(() => {
     const parsed = parseISO(detail.registeredAt)
@@ -477,13 +478,12 @@ function DetailLoaded({
                   <AsyncCommandSelect
                     value={field.value ?? ""}
                     onValueChange={field.onChange}
-                    placeholder="Search organizations…"
+                    placeholder="Search corporate taxpayers…"
                     queryKeyPrefix={[
-                      ...queryKeys.masterData.organizationsRoot(),
-                      "async-select",
-                      "individual-detail",
+                      ...queryKeys.taxpayers.all,
+                      "employer-select",
                     ]}
-                    loadOptions={loadActiveOrganizationsAsyncOptions}
+                    loadOptions={loadCorporateEmployerOptions}
                     displayLabel={employerLabel}
                     aria-invalid={fieldState.invalid}
                   />
@@ -517,10 +517,7 @@ function DetailLoaded({
           </form>
         ) : (
           <dl className="grid gap-6 md:grid-cols-2">
-            <ProfileReadOnlyField
-              label="First name"
-              value={detail.firstName}
-            />
+            <ProfileReadOnlyField label="First name" value={detail.firstName} />
             <ProfileReadOnlyField
               label="Middle name"
               value={detail.middleName?.trim() || "—"}
@@ -542,13 +539,21 @@ function DetailLoaded({
               label="Nationality"
               value={detail.nationality}
             />
-            <ProfileReadOnlyField label="NIN" value={detail.nin?.trim() || "—"} />
-            <ProfileReadOnlyField label="BVN" value={detail.bvn?.trim() || "—"} />
+            <ProfileReadOnlyField
+              label="NIN"
+              value={detail.nin?.trim() || "—"}
+            />
+            <ProfileReadOnlyField
+              label="BVN"
+              value={detail.bvn?.trim() || "—"}
+            />
             <ProfileReadOnlyField label="Phone" value={detail.phone} />
             <ProfileReadOnlyField label="Email" value={detail.email} />
             <ProfileReadOnlyField
               label="Address"
-              value={<span className="whitespace-pre-wrap">{detail.address}</span>}
+              value={
+                <span className="whitespace-pre-wrap">{detail.address}</span>
+              }
             />
             <ProfileReadOnlyField
               label="LGA of origin"

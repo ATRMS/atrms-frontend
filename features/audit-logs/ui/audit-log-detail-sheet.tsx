@@ -30,10 +30,7 @@ function JsonBlock({
   title: string
   value: Record<string, unknown> | null | undefined
 }) {
-  const text =
-    value == null
-      ? "—"
-      : JSON.stringify(value, null, 2)
+  const text = value == null ? "—" : JSON.stringify(value, null, 2)
 
   return (
     <div className="flex min-w-0 flex-col gap-2">
@@ -111,12 +108,10 @@ export function AuditLogDetailSheet({
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      void navigator.clipboard
-                        .writeText(detail.entityId)
-                        .then(
-                          () => notify.success("Entity ID copied."),
-                          () => notify.error("Could not copy.")
-                        )
+                      void navigator.clipboard.writeText(detail.entityId).then(
+                        () => notify.success("Entity ID copied."),
+                        () => notify.error("Could not copy.")
+                      )
                     }}
                   >
                     Copy
@@ -172,7 +167,7 @@ export function AuditLogDetailSheet({
                 value={
                   fullDetail.action === "CREATE"
                     ? null
-                    : fullDetail.oldValues ?? null
+                    : (fullDetail.oldValues ?? null)
                 }
               />
               <JsonBlock
@@ -180,7 +175,7 @@ export function AuditLogDetailSheet({
                 value={
                   fullDetail.action === "DELETE"
                     ? null
-                    : fullDetail.newValues ?? null
+                    : (fullDetail.newValues ?? null)
                 }
               />
             </div>

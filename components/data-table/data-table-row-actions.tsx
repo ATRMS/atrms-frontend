@@ -67,10 +67,7 @@ export function DataTableRowActions({
           <MoreHorizontalIcon />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        className={cn("w-56", contentClassName)}
-      >
+      <DropdownMenuContent align="end" className={cn("w-56", contentClassName)}>
         {menuTitle ? (
           <>
             <DropdownMenuLabel className="truncate font-normal text-muted-foreground">

@@ -21,8 +21,7 @@ function normalizeTinRequestsRequestParams(
 ): ApiListParams & { status?: string; taxpayerType?: string } {
   const { status: st, taxpayerType: tt, ...rest } = params
 
-  const status =
-    typeof st === "string" && st.trim() ? st.trim() : undefined
+  const status = typeof st === "string" && st.trim() ? st.trim() : undefined
   const taxpayerType =
     typeof tt === "string" && tt.trim() ? tt.trim() : undefined
 
@@ -36,11 +35,12 @@ function normalizeTinRequestsRequestParams(
 export async function fetchTinRequestsList(
   params: TinRequestsListParams
 ): Promise<PaginatedListResponse<TinRequestListItem>> {
-  const res = await apiClient.get<
-    PaginatedListResponse<TinRequestListItem>
-  >(apiPaths.taxpayers.tinRequests, {
-    params: normalizeTinRequestsRequestParams(params),
-  })
+  const res = await apiClient.get<PaginatedListResponse<TinRequestListItem>>(
+    apiPaths.taxpayers.tinRequests,
+    {
+      params: normalizeTinRequestsRequestParams(params),
+    }
+  )
 
   return res.data
 }

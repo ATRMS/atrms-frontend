@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
 
-import { regionsReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
+import { lookupsQueryOptions } from "@/lib/query/lookups"
 import type { TaxOfficeListItem } from "@/features/tax-offices/types"
 import {
   taxOfficeFormSchema,
@@ -37,6 +37,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
+import { normaliseError } from "@/lib/api/client"
+import { applyApiFieldErrors } from "@/lib/form-errors"
 
 const emptyDefaults: TaxOfficeFormInputValues = {
   code: "",
@@ -61,7 +63,8 @@ export function TaxOfficeFormSheet({
   const createMutation = useCreateTaxOfficeMutation()
   const updateMutation = useUpdateTaxOfficeMutation(taxOffice?.id ?? "")
 
-  const { data: regions = [] } = useQuery(regionsReferenceQueryOptions())
+  const { data: lookups } = useQuery(lookupsQueryOptions(["regions"]))
+  const regions = useMemo(() => lookups?.regions ?? [], [lookups?.regions])
 
   const regionOptions = useMemo(
     () => [...regions].sort((a, b) => a.name.localeCompare(b.name)),
@@ -97,14 +100,23 @@ export function TaxOfficeFormSheet({
 
   function onSubmit(values: TaxOfficeFormValues) {
     const payload = toTaxOfficeWritePayload(values)
+    const onError = (caught: unknown) => {
+      applyApiFieldErrors(normaliseError(caught), form.setError, {
+        "master-data.region.inactive": "regionId",
+        "master-data.tax-office.code-taken": "code",
+        "master-data.code.immutable": "code",
+      })
+    }
 
     if (taxOffice) {
       updateMutation.mutate(payload, {
         onSuccess: () => onOpenChange(false),
+        onError,
       })
     } else {
       createMutation.mutate(payload, {
         onSuccess: () => onOpenChange(false),
+        onError,
       })
     }
   }

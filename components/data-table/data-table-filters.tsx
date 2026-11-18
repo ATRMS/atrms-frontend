@@ -152,10 +152,7 @@ export function parseDataTableUrlState(
   defaultPageSize: number
 ): DataTableUrlState {
   const page = Math.max(1, Number.parseInt(sp.get("page") ?? "1", 10) || 1)
-  const sizeRaw = Number.parseInt(
-    sp.get("size") ?? String(defaultPageSize),
-    10
-  )
+  const sizeRaw = Number.parseInt(sp.get("size") ?? String(defaultPageSize), 10)
   const size = DATA_TABLE_PAGE_SIZE_OPTIONS.includes(
     sizeRaw as (typeof DATA_TABLE_PAGE_SIZE_OPTIONS)[number]
   )
@@ -220,11 +217,7 @@ export function mergeDataTableListParams(
       if (!v) continue
       const n = Number(v)
       if (Number.isFinite(n)) params[pk] = n
-    } else if (
-      f.type === "text" ||
-      f.type === "search" ||
-      f.type === "date"
-    ) {
+    } else if (f.type === "text" || f.type === "search" || f.type === "date") {
       const v = raw?.trim() ?? ""
       if (v) params[pk] = v
     }
@@ -357,14 +350,7 @@ function DebouncedTextFilter({
     }
 
     onFiltersPatch({ [paramKey]: debounced })
-  }, [
-    debounced,
-    draft,
-    value,
-    type,
-    paramKey,
-    onFiltersPatch,
-  ])
+  }, [debounced, draft, value, type, paramKey, onFiltersPatch])
 
   const inputType = type === "number" ? "number" : "search"
 

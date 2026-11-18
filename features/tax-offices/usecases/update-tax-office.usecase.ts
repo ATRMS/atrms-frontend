@@ -12,7 +12,8 @@ export function useUpdateTaxOfficeMutation(id: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: TaxOfficeWritePayload) => updateTaxOffice(id, payload),
+    mutationFn: (payload: TaxOfficeWritePayload) =>
+      updateTaxOffice(id, payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.masterData.taxOfficesRoot(),

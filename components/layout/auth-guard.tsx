@@ -7,6 +7,7 @@ import { useAuthStore } from "@/features/authentication/store/auth-store"
 
 export function AuthGuard({ children }: { children: ReactNode }) {
   const user = useAuthStore((state) => state.user)
+  const mustChangePassword = useAuthStore((state) => state.mustChangePassword)
   const hydrateFromSession = useAuthStore((state) => state.hydrateFromSession)
   const router = useRouter()
   const pathname = usePathname()
@@ -21,6 +22,12 @@ export function AuthGuard({ children }: { children: ReactNode }) {
 
         if (!ok && isMounted) {
           router.replace(`/login?next=${encodeURIComponent(pathname)}`)
+        } else if (
+          ok &&
+          isMounted &&
+          useAuthStore.getState().mustChangePassword
+        ) {
+          router.replace("/change-password")
         }
       } finally {
         if (isMounted) {
@@ -44,7 +51,7 @@ export function AuthGuard({ children }: { children: ReactNode }) {
     )
   }
 
-  if (!user) {
+  if (!user || mustChangePassword) {
     return null
   }
 

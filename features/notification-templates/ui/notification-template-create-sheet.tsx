@@ -124,10 +124,7 @@ export function NotificationTemplateCreateSheet({
                 label="Channel"
                 required
                 render={({ field, fieldState }) => (
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger aria-invalid={fieldState.invalid}>
                       <SelectValue placeholder="Channel" />
                     </SelectTrigger>

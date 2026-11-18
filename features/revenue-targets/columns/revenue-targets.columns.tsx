@@ -82,9 +82,7 @@ export function buildRevenueTargetsColumns(
     {
       accessorKey: "taxTypeId",
       header: "Tax type",
-      cell: ({ row }) => (
-        <TaxTypeNameCell taxTypeId={row.original.taxTypeId} />
-      ),
+      cell: ({ row }) => <TaxTypeNameCell taxTypeId={row.original.taxTypeId} />,
     },
     {
       accessorKey: "fiscalYear",
@@ -109,9 +107,7 @@ export function buildRevenueTargetsColumns(
     {
       id: "actions",
       header: "",
-      cell: ({ row }) => (
-        <RevenueTargetRowActions target={row.original} />
-      ),
+      cell: ({ row }) => <RevenueTargetRowActions target={row.original} />,
     },
   ]
 }

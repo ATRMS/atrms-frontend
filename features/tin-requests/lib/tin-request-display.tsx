@@ -14,7 +14,11 @@ export function formatTinRequestDate(iso: string): string {
   }
 }
 
-export function TinRequestStatusBadge({ status }: { status: TinRequestStatus }) {
+export function TinRequestStatusBadge({
+  status,
+}: {
+  status: TinRequestStatus
+}) {
   const variant =
     status === "PENDING"
       ? "pending"
@@ -55,8 +59,7 @@ export function UuidPreview({
   id: string
   maxLen?: number
 }) {
-  const preview =
-    id.length <= maxLen ? id : `${id.slice(0, maxLen)}…`
+  const preview = id.length <= maxLen ? id : `${id.slice(0, maxLen)}…`
 
   return (
     <span className="font-mono text-xs" title={id}>

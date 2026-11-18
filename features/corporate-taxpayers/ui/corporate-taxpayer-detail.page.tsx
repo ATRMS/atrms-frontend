@@ -80,11 +80,7 @@ function detailToFormValues(
   }
 }
 
-function BusinessLineLookup({
-  businessLineId,
-}: {
-  businessLineId: string
-}) {
+function BusinessLineLookup({ businessLineId }: { businessLineId: string }) {
   const { data: lines = [] } = useQuery(businessLinesReferenceQueryOptions())
 
   const label = useMemo(() => {
@@ -416,9 +412,9 @@ function DetailLoaded({
                       value={
                         field.value === "" || field.value == null
                           ? ""
-                          : parseAnnualIncomeToNumber(field.value).toLocaleString(
-                              "en-NG"
-                            )
+                          : parseAnnualIncomeToNumber(
+                              field.value
+                            ).toLocaleString("en-NG")
                       }
                     />
                   )}
@@ -459,7 +455,9 @@ function DetailLoaded({
             />
             <ProfileReadOnlyField
               label="Business line"
-              value={<BusinessLineLookup businessLineId={detail.businessLineId} />}
+              value={
+                <BusinessLineLookup businessLineId={detail.businessLineId} />
+              }
             />
             <ProfileReadOnlyField
               label="Tax office"
@@ -489,9 +487,7 @@ function DetailLoaded({
             />
             <ProfileReadOnlyField
               label="Employee count"
-              value={
-                detail.employeeCount != null ? detail.employeeCount : "—"
-              }
+              value={detail.employeeCount != null ? detail.employeeCount : "—"}
             />
           </dl>
         )}

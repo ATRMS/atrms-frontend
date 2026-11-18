@@ -6,6 +6,7 @@ import type {
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { apiClient, normaliseError } from "@/lib/api/client"
+import { publicEnv } from "@/lib/config/env"
 import { useAuthStore } from "@/features/authentication/store/auth-store"
 
 const { getAccessTokenMock, refreshAuthCookiesMock } = vi.hoisted(() => ({
@@ -31,6 +32,10 @@ describe("apiClient", () => {
     getAccessTokenMock.mockReset()
     refreshAuthCookiesMock.mockReset()
     vi.restoreAllMocks()
+  })
+
+  it("uses the public upstream API URL in the browser", () => {
+    expect(apiClient.defaults.baseURL).toBe(publicEnv.apiBaseUrl || undefined)
   })
 
   it("injects the Authorization header when an access token is present", async () => {

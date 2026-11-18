@@ -1,8 +1,6 @@
 import { z } from "zod"
 
 export const systemSettingsFormSchema = z.object({
-  taxAuthorityId: z.string().trim().max(64),
-  taxAuthorityName: z.string().trim().max(255),
   sessionTimeoutMinutes: z
     .union([z.literal(""), z.number().int().min(5).max(480)])
     .refine((v) => v !== "", "Session timeout is required"),
@@ -36,8 +34,6 @@ export type SystemSettingsFormValues = z.infer<typeof systemSettingsFormSchema>
 
 /** RHF values before Zod coercion (`z.coerce` input is `unknown` in Zod 4). */
 export type SystemSettingsFormInputValues = {
-  taxAuthorityId: string
-  taxAuthorityName: string
   sessionTimeoutMinutes: number | ""
   failedLoginAttempts: number | ""
   passwordExpirationDays: number | ""

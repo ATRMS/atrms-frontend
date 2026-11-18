@@ -32,9 +32,7 @@ export const tinRequestsColumns: ColumnDef<TinRequestListItem>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => (
-      <TinRequestStatusBadge status={row.original.status} />
-    ),
+    cell: ({ row }) => <TinRequestStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "generatedTin",

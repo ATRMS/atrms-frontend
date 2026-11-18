@@ -9,7 +9,8 @@ const STATUS_FILTER_OPTIONS = [
 ] as const
 
 export function bankAccountFilters(
-  taxTypeOptions: { id: string; code: string; name: string }[]
+  taxTypeOptions: { id: string; code: string; name: string }[],
+  revenueHeadOptions: { id: string; code: string; name: string }[] = []
 ): DataTableFilterConfig[] {
   return [
     {
@@ -22,6 +23,18 @@ export function bankAccountFilters(
         ...taxTypeOptions.map((t) => ({
           value: t.id,
           label: `${t.code} — ${t.name}`,
+        })),
+      ],
+    },
+    {
+      type: "select",
+      paramKey: "revenueHeadId",
+      label: "Revenue head",
+      options: [
+        { value: "__all__", label: "All revenue heads" },
+        ...revenueHeadOptions.map((item) => ({
+          value: item.id,
+          label: `${item.code} — ${item.name}`,
         })),
       ],
     },
@@ -40,6 +53,10 @@ export function bankAccountsListParamsFromFilters(
 ): BankAccountsListParams {
   const taxTypeId = dataTableSelectFilterValue(filterValues, "taxTypeId")
   const status = dataTableSelectFilterValue(filterValues, "isActive")
+  const revenueHeadId = dataTableSelectFilterValue(
+    filterValues,
+    "revenueHeadId"
+  )
 
   let isActive: boolean | undefined
   if (status === "true") isActive = true
@@ -47,6 +64,7 @@ export function bankAccountsListParamsFromFilters(
 
   return {
     ...(taxTypeId ? { taxTypeId } : {}),
+    ...(revenueHeadId ? { revenueHeadId } : {}),
     ...(isActive !== undefined ? { isActive } : {}),
   }
 }

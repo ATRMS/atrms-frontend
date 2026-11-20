@@ -36,16 +36,17 @@ export function UserStatusBadge({ status }: { status: UserAccountStatus }) {
   )
 }
 
-export function formatRoleLabel(code: string): string {
-  if (!code.trim()) return "—"
+export function formatRoleLabel(code: UserListItem["role"]): string {
+  const trimmedCode = code?.trim()
+  if (!trimmedCode) return "—"
 
-  return code
+  return trimmedCode
     .split("_")
     .map((part) => part.charAt(0) + part.slice(1).toLowerCase())
     .join(" ")
 }
 
-export function UserRoleBadge({ code }: { code: string }) {
+export function UserRoleBadge({ code }: { code: UserListItem["role"] }) {
   return (
     <Badge variant="outline" className="font-normal">
       {formatRoleLabel(code)}

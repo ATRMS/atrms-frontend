@@ -51,7 +51,7 @@ function userToFormValues(user: UserDetail): UpdateUserFormValues {
     lastName: user.lastName,
     staffId: user.staffId ?? "",
     phone: user.phone ?? "",
-    roleCode: user.role,
+    roleCode: user.role?.trim() ?? "",
     taxOfficeId: user.taxOfficeId ?? OPTIONAL_SELECT_NONE,
   }
 }

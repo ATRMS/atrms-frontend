@@ -66,7 +66,7 @@ export interface UserListItem {
   status: UserAccountStatus
   mustChangePassword?: boolean
   /** Role code from upstream (e.g. `ASSESSOR`). */
-  role: string
+  role?: string | null
 }
 
 /** Single-user GET `/users/:id` — same core fields as list rows unless backend extends later. */

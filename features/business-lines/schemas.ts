@@ -1,23 +1,14 @@
 import { z } from "zod"
+import { uuidSchema } from "@/lib/schemas/common"
 
-export const createBusinessLineSchema = z.object({
+export const businessLineSchema = z.object({
   code: z
     .string()
+    .trim()
     .min(1, "Code is required")
-    .transform((s) => s.trim().toUpperCase()),
-  name: z.string().min(1, "Name is required").trim(),
-  sector: z.string().trim().optional(),
+    .transform((value) => value.toUpperCase()),
+  name: z.string().trim().min(1, "Name is required"),
+  sectorId: uuidSchema,
 })
-
-export type CreateBusinessLineFormValues = z.input<
-  typeof createBusinessLineSchema
->
-
-export const updateBusinessLineSchema = z.object({
-  name: z.string().min(1, "Name is required").trim(),
-  sector: z.string().trim().optional(),
-})
-
-export type UpdateBusinessLineFormValues = z.infer<
-  typeof updateBusinessLineSchema
->
+export type BusinessLineInput = z.input<typeof businessLineSchema>
+export type BusinessLineValues = z.infer<typeof businessLineSchema>

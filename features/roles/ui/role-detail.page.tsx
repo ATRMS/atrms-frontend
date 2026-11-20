@@ -58,7 +58,9 @@ function RoleDetailPermissionsSection({
           <Button
             type="button"
             disabled={saveMutation.isPending}
-            onClick={() => saveMutation.mutate({ roleId, permissionIds: [...selectedIds] })}
+            onClick={() =>
+              saveMutation.mutate({ roleId, permissionIds: [...selectedIds] })
+            }
           >
             {saveMutation.isPending ? "Saving…" : "Save permissions"}
           </Button>

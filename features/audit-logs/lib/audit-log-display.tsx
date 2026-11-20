@@ -40,11 +40,7 @@ const RESULT_VARIANT: Record<
 }
 
 export function AuditResultBadge({ result }: { result: AuditResult }) {
-  return (
-    <Badge variant={RESULT_VARIANT[result] ?? "secondary"}>
-      {result}
-    </Badge>
-  )
+  return <Badge variant={RESULT_VARIANT[result] ?? "secondary"}>{result}</Badge>
 }
 
 export function AuditEntityTypeBadge({ entityType }: { entityType: string }) {

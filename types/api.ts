@@ -16,6 +16,12 @@ export interface Meta {
   total: number
 }
 
+export interface FieldErrorDetail {
+  field: string
+  messageKey: string
+  message: string
+}
+
 export interface ApiError {
   status: number
   error: string
@@ -23,7 +29,9 @@ export interface ApiError {
   timestamp: string
   path: string
   traceId: string
-  fieldErrors?: Record<string, string[]>
+  code: ApiErrorCode | null
+  messageKey: string | null
+  fieldErrors: FieldErrorDetail[]
 }
 
 export interface PageParams {
@@ -39,3 +47,4 @@ export interface PageParams {
 export interface ApiListParams extends PageParams {
   [key: string]: string | number | boolean | undefined
 }
+import type { ApiErrorCode } from "@/lib/api/error-codes"

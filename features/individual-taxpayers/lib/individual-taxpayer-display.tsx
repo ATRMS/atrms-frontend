@@ -7,8 +7,7 @@ export function formatIndividualAnnualIncome(
   if (value === null || value === undefined || value === "") {
     return "—"
   }
-  const n =
-    typeof value === "number" ? value : Number.parseFloat(String(value))
+  const n = typeof value === "number" ? value : Number.parseFloat(String(value))
   if (!Number.isFinite(n)) {
     return String(value)
   }
@@ -57,8 +56,7 @@ export function taxpayerStatusLabel(status: TaxpayerStatus): string {
 
 export function TaxpayerStatusBadge({ status }: { status: TaxpayerStatus }) {
   return (
-    <Badge
-      variant={STATUS_VARIANT[status] ?? "secondary"}>
+    <Badge variant={STATUS_VARIANT[status] ?? "secondary"}>
       {taxpayerStatusLabel(status)}
     </Badge>
   )

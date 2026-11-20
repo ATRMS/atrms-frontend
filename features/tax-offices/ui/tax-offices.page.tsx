@@ -15,7 +15,7 @@ import {
   type DataTableFilterConfig,
 } from "@/components/data-table/data-table"
 import { Button } from "@/components/ui/button"
-import { regionsReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
+import { lookupsQueryOptions } from "@/lib/query/lookups"
 import { queryKeys } from "@/lib/query-keys"
 
 const STATUS_FILTER_OPTIONS = [
@@ -27,7 +27,8 @@ const STATUS_FILTER_OPTIONS = [
 export function TaxOfficesPage() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const { data: regions = [] } = useQuery(regionsReferenceQueryOptions())
+  const { data: lookups } = useQuery(lookupsQueryOptions(["regions"]))
+  const regions = useMemo(() => lookups?.regions ?? [], [lookups?.regions])
 
   const filters = useMemo<DataTableFilterConfig[]>(
     () => [

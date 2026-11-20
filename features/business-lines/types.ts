@@ -1,20 +1,16 @@
-/** Row from `GET /master-data/business-lines`. */
-export interface BusinessLineListItem {
+export interface BusinessLine {
   id: string
   code: string
   name: string
-  sector?: string | null
-  isActive: boolean
+  sectorId: string
+  sectorCode: string
+  active: boolean
 }
-
-export interface CreateBusinessLinePayload {
+export type BusinessLineListItem = BusinessLine
+export type BusinessLineWritePayload = {
   code: string
   name: string
-  sector?: string
+  sectorId: string
 }
-
-export interface UpdateBusinessLinePayload {
-  name: string
-  sector?: string
-  code: string
-}
+export type CreateBusinessLinePayload = BusinessLineWritePayload
+export type UpdateBusinessLinePayload = BusinessLineWritePayload

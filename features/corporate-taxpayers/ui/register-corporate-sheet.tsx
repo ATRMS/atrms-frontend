@@ -134,220 +134,220 @@ export function RegisterCorporateSheet({
         >
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
             <FieldGroup className="gap-4">
-            <p className="text-sm font-semibold">Identity</p>
+              <p className="text-sm font-semibold">Identity</p>
 
-            <FormField
-              control={form.control}
-              name="tin"
-              label="TIN"
-              required
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  autoComplete="off"
-                  readOnly={tinLocked}
-                  aria-invalid={fieldState.invalid}
-                  className={cn(tinLocked && "bg-muted")}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="companyName"
-              label="Company name"
-              required
-              render={({ field, fieldState }) => (
-                <Input {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="regNumber"
-              label="CAC registration number"
-              required
-              render={({ field, fieldState }) => (
-                <Input {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dateOfIncorporation"
-              label="Date of incorporation"
-              required
-              description="Cannot be a future date."
-              render={({ field, fieldState }) => (
-                <IncorporationDatePicker
-                  id={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  invalid={fieldState.invalid}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="companyType"
-              label="Company type"
-              required
-              render={({ field, fieldState }) => (
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <SelectTrigger aria-invalid={fieldState.invalid}>
-                    <SelectValue placeholder="Company type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CORPORATE_COMPANY_TYPES.map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {companyTypeLabel(value)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </FieldGroup>
-
-          <FieldGroup className="gap-4 border-t pt-6">
-            <p className="text-sm font-semibold">Business classification</p>
-
-            <FormField
-              control={form.control}
-              name="businessLineId"
-              label="Business line"
-              required
-              description="Search active business lines."
-              render={({ field, fieldState }) => (
-                <AsyncCommandSelect
-                  value={field.value ?? ""}
-                  onValueChange={field.onChange}
-                  placeholder="Search business lines…"
-                  queryKeyPrefix={businessLineAsyncPrefix}
-                  loadOptions={loadActiveBusinessLinesAsyncOptions}
-                  aria-invalid={fieldState.invalid}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="taxOfficeId"
-              label="Tax office"
-              required
-              render={({ field, fieldState }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={
-                    taxOfficesPending || sortedTaxOffices.length === 0
-                  }
-                >
-                  <SelectTrigger aria-invalid={fieldState.invalid}>
-                    <SelectValue placeholder="Tax office" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortedTaxOffices.map((o) => (
-                      <SelectItem key={o.id} value={o.id}>
-                        {o.code} — {o.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </FieldGroup>
-
-          <FieldGroup className="gap-4 border-t pt-6">
-            <p className="text-sm font-semibold">Contact</p>
-
-            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="phone"
-                label="Phone"
+                name="tin"
+                label="TIN"
+                required
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    autoComplete="off"
+                    readOnly={tinLocked}
+                    aria-invalid={fieldState.invalid}
+                    className={cn(tinLocked && "bg-muted")}
+                  />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="companyName"
+                label="Company name"
                 required
                 render={({ field, fieldState }) => (
                   <Input {...field} aria-invalid={fieldState.invalid} />
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="email"
-                label="Email"
+                name="regNumber"
+                label="CAC registration number"
                 required
                 render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    type="email"
+                  <Input {...field} aria-invalid={fieldState.invalid} />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dateOfIncorporation"
+                label="Date of incorporation"
+                required
+                description="Cannot be a future date."
+                render={({ field, fieldState }) => (
+                  <IncorporationDatePicker
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    invalid={fieldState.invalid}
+                  />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="companyType"
+                label="Company type"
+                required
+                render={({ field, fieldState }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger aria-invalid={fieldState.invalid}>
+                      <SelectValue placeholder="Company type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CORPORATE_COMPANY_TYPES.map((value) => (
+                        <SelectItem key={value} value={value}>
+                          {companyTypeLabel(value)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </FieldGroup>
+
+            <FieldGroup className="gap-4 border-t pt-6">
+              <p className="text-sm font-semibold">Business classification</p>
+
+              <FormField
+                control={form.control}
+                name="businessLineId"
+                label="Business line"
+                required
+                description="Search active business lines."
+                render={({ field, fieldState }) => (
+                  <AsyncCommandSelect
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                    placeholder="Search business lines…"
+                    queryKeyPrefix={businessLineAsyncPrefix}
+                    loadOptions={loadActiveBusinessLinesAsyncOptions}
                     aria-invalid={fieldState.invalid}
                   />
                 )}
               />
-            </div>
 
-            <FormField
-              control={form.control}
-              name="registeredAddress"
-              label="Registered address"
-              required
-              render={({ field, fieldState }) => (
-                <Textarea {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="taxOfficeId"
+                label="Tax office"
+                required
+                render={({ field, fieldState }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    disabled={
+                      taxOfficesPending || sortedTaxOffices.length === 0
+                    }
+                  >
+                    <SelectTrigger aria-invalid={fieldState.invalid}>
+                      <SelectValue placeholder="Tax office" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sortedTaxOffices.map((o) => (
+                        <SelectItem key={o.id} value={o.id}>
+                          {o.code} — {o.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </FieldGroup>
 
-            <FormField
-              control={form.control}
-              name="operatingAddress"
-              label="Operating address"
-              required
-              render={({ field, fieldState }) => (
-                <Textarea {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
+            <FieldGroup className="gap-4 border-t pt-6">
+              <p className="text-sm font-semibold">Contact</p>
 
-            <FormField
-              control={form.control}
-              name="annualTurnover"
-              label="Annual turnover (NGN)"
-              required
-              description="Digits only — formatted with grouping."
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  inputMode="decimal"
-                  aria-invalid={fieldState.invalid}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/[^\d]/g, "")
-                    field.onChange(raw === "" ? "" : raw)
-                  }}
-                  value={
-                    field.value === "" || field.value == null
-                      ? ""
-                      : parseAnnualIncomeToNumber(field.value).toLocaleString(
-                        "en-NG"
-                      )
-                  }
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  label="Phone"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
                 />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="employeeCount"
-              label="Employee count"
-              description="Optional — whole number."
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  inputMode="numeric"
-                  aria-invalid={fieldState.invalid}
-                  placeholder="e.g. 45"
+                <FormField
+                  control={form.control}
+                  name="email"
+                  label="Email"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      type="email"
+                      aria-invalid={fieldState.invalid}
+                    />
+                  )}
                 />
-              )}
-            />
-          </FieldGroup>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="registeredAddress"
+                label="Registered address"
+                required
+                render={({ field, fieldState }) => (
+                  <Textarea {...field} aria-invalid={fieldState.invalid} />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="operatingAddress"
+                label="Operating address"
+                required
+                render={({ field, fieldState }) => (
+                  <Textarea {...field} aria-invalid={fieldState.invalid} />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="annualTurnover"
+                label="Annual turnover (NGN)"
+                required
+                description="Digits only — formatted with grouping."
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    inputMode="decimal"
+                    aria-invalid={fieldState.invalid}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/[^\d]/g, "")
+                      field.onChange(raw === "" ? "" : raw)
+                    }}
+                    value={
+                      field.value === "" || field.value == null
+                        ? ""
+                        : parseAnnualIncomeToNumber(field.value).toLocaleString(
+                            "en-NG"
+                          )
+                    }
+                  />
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="employeeCount"
+                label="Employee count"
+                description="Optional — whole number."
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    inputMode="numeric"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="e.g. 45"
+                  />
+                )}
+              />
+            </FieldGroup>
           </div>
 
           <SheetFooter className="shrink-0 gap-2 border-t bg-muted/30 sm:flex-row sm:justify-end">

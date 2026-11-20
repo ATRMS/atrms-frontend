@@ -30,8 +30,7 @@ function normalizeTaxOfficesRequestParams(
     isActive = false
   }
 
-  const regionId =
-    typeof ridRaw === "string" ? ridRaw.trim() : undefined
+  const regionId = typeof ridRaw === "string" ? ridRaw.trim() : undefined
 
   return {
     ...rest,
@@ -63,7 +62,7 @@ export async function fetchTaxOfficesReference(): Promise<TaxOfficeListItem[]> {
   return res.data
 }
 
-/** Active offices only (organization classification, dropdowns). */
+/** Active offices only (assignments and dropdowns). */
 export async function fetchTaxOfficesActiveReference(): Promise<
   TaxOfficeListItem[]
 > {
@@ -78,8 +77,8 @@ export async function fetchTaxOfficesActiveReference(): Promise<
 
 export async function createTaxOffice(
   payload: TaxOfficeWritePayload
-): Promise<TaxOfficeListItem> {
-  const res = await apiClient.post<ApiResponse<TaxOfficeListItem>>(
+): Promise<string> {
+  const res = await apiClient.post<ApiResponse<string>>(
     apiPaths.masterData.taxOffices,
     payload
   )

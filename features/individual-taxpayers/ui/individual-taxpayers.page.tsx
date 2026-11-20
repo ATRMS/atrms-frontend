@@ -44,8 +44,7 @@ export function IndividualsTaxpayersPage({
 
   const [manualSheetOpen, setManualSheetOpen] = useState(false)
   const tinForRegistration = tinFromServer?.trim() ?? ""
-  const sheetOpen =
-    manualSheetOpen || Boolean(tinForRegistration)
+  const sheetOpen = manualSheetOpen || Boolean(tinForRegistration)
 
   function handleSheetOpenChange(open: boolean) {
     setManualSheetOpen(open)
@@ -121,7 +120,9 @@ export function IndividualsTaxpayersPage({
   return (
     <PermissionGate
       permission={PermissionCodes.taxpayerRead}
-      fallback={<PermissionDeniedFallback resourceLabel="individual taxpayers" />}
+      fallback={
+        <PermissionDeniedFallback resourceLabel="individual taxpayers" />
+      }
     >
       <div className="flex flex-col gap-6">
         <PageHeader

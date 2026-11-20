@@ -9,6 +9,7 @@ export const bankAccountCreateSchema = z.object({
   bankCode: z.string().min(1, "Required").trim(),
   taxTypeId: uuidSchema,
   currencyId: uuidSchema,
+  revenueHeadId: z.union([z.literal(""), uuidSchema]).optional(),
 })
 
 export type BankAccountCreateFormValues = z.infer<
@@ -20,6 +21,9 @@ export const bankAccountUpdateSchema = z.object({
   accountName: z.string().min(1, "Required").trim(),
   bankName: z.string().min(1, "Required").trim(),
   bankCode: z.string().min(1, "Required").trim(),
+  taxTypeId: uuidSchema,
+  currencyId: uuidSchema,
+  revenueHeadId: z.union([z.literal(""), uuidSchema]).optional(),
 })
 
 export type BankAccountUpdateFormValues = z.infer<

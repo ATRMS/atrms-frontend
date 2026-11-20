@@ -175,9 +175,9 @@ export function DataTable<TData, TValue = unknown>({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -221,15 +221,13 @@ export function DataTable<TData, TValue = unknown>({
                   <TableRow
                     key={row.id}
                     className={
-                      href
-                        ? "cursor-pointer hover:bg-muted/60"
-                        : undefined
+                      href ? "cursor-pointer hover:bg-muted/60" : undefined
                     }
                     onClick={
                       href
                         ? () => {
-                          router.push(href)
-                        }
+                            router.push(href)
+                          }
                         : undefined
                     }
                   >
@@ -261,8 +259,7 @@ export function DataTable<TData, TValue = unknown>({
       {!isError && meta && total > 0 ? (
         <div className="flex flex-col gap-4 px-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing{" "}
-            <span className="font-medium text-foreground">{from}</span>
+            Showing <span className="font-medium text-foreground">{from}</span>
             {"–"}
             <span className="font-medium text-foreground">{to}</span>
             {" of "}
@@ -309,7 +306,10 @@ export function DataTable<TData, TValue = unknown>({
                   variant="outline"
                   size="icon-sm"
                   onClick={() =>
-                    replaceUrlState({ ...urlState, page: Math.max(1, page - 1) })
+                    replaceUrlState({
+                      ...urlState,
+                      page: Math.max(1, page - 1),
+                    })
                   }
                   disabled={page <= 1}
                   aria-label="Previous page"

@@ -12,6 +12,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -28,6 +29,7 @@ export function NavMain({
     url: string
     icon?: ReactNode
     isActive?: boolean
+    badge?: number
     items?: {
       title: string
       url: string
@@ -54,6 +56,9 @@ export function NavMain({
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
+                {item.badge ? (
+                  <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
+                ) : null}
               </SidebarMenuItem>
             )
           }

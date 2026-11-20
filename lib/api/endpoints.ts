@@ -7,7 +7,12 @@ export const apiPaths = {
     login: "/auth/login",
     refresh: "/auth/refresh",
     logout: "/auth/logout",
+    me: "/auth/me",
+    changePassword: "/auth/change-password",
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
   },
+  languages: "/languages",
   users: {
     collection: "/users",
     detail: (id: string) => `/users/${encodeURIComponent(id)}` as const,
@@ -16,6 +21,7 @@ export const apiPaths = {
     status: (id: string) => `/users/${encodeURIComponent(id)}/status` as const,
     transfers: (id: string) =>
       `/users/${encodeURIComponent(id)}/transfers` as const,
+    language: "/users/me/language",
   },
   roles: {
     collection: "/roles",
@@ -44,6 +50,17 @@ export const apiPaths = {
     collection: "/audit-logs",
     detail: (id: string) => `/audit-logs/${encodeURIComponent(id)}` as const,
   },
+  public: {
+    branding: "/public/branding",
+  },
+  reports: {
+    available: "/reports",
+  },
+  workflow: {
+    inbox: "/workflow/inbox",
+    instance: (id: string) =>
+      `/workflow/instances/${encodeURIComponent(id)}` as const,
+  },
   taxpayers: {
     tinRequests: "/tin-requests",
     tinRequestApprove: (id: string) =>
@@ -62,6 +79,76 @@ export const apiPaths = {
       `/taxpayers/${encodeURIComponent(id)}/status` as const,
   },
   masterData: {
+    lookups: "/master-data/lookups",
+    authorityProfile: "/master-data/authority-profile",
+    authorityBranding: (asset: string) =>
+      `/master-data/authority-profile/branding/${encodeURIComponent(asset)}` as const,
+    sectors: "/master-data/sectors",
+    sectorDetail: (id: string) =>
+      `/master-data/sectors/${encodeURIComponent(id)}` as const,
+    sectorActivate: (id: string) =>
+      `/master-data/sectors/${encodeURIComponent(id)}/activate` as const,
+    sectorDeactivate: (id: string) =>
+      `/master-data/sectors/${encodeURIComponent(id)}/deactivate` as const,
+    stateAgencies: "/master-data/state-agencies",
+    stateAgencyDetail: (id: string) =>
+      `/master-data/state-agencies/${encodeURIComponent(id)}` as const,
+    stateAgencyActivate: (id: string) =>
+      `/master-data/state-agencies/${encodeURIComponent(id)}/activate` as const,
+    stateAgencyDeactivate: (id: string) =>
+      `/master-data/state-agencies/${encodeURIComponent(id)}/deactivate` as const,
+    lgas: "/master-data/lgas",
+    lgaDetail: (id: string) =>
+      `/master-data/lgas/${encodeURIComponent(id)}` as const,
+    lgaActivate: (id: string) =>
+      `/master-data/lgas/${encodeURIComponent(id)}/activate` as const,
+    lgaDeactivate: (id: string) =>
+      `/master-data/lgas/${encodeURIComponent(id)}/deactivate` as const,
+    revenueHeads: "/master-data/revenue-heads",
+    revenueHeadDetail: (id: string) =>
+      `/master-data/revenue-heads/${encodeURIComponent(id)}` as const,
+    revenueHeadRates: (id: string) =>
+      `/master-data/revenue-heads/${encodeURIComponent(id)}/rates` as const,
+    revenueHeadRate: (id: string) =>
+      `/master-data/revenue-heads/${encodeURIComponent(id)}/rate` as const,
+    revenueHeadRateVersion: (id: string, version: number) =>
+      `/master-data/revenue-heads/${encodeURIComponent(id)}/rates/${version}` as const,
+    parameters: "/master-data/parameters",
+    parameterDetail: (code: string) =>
+      `/master-data/parameters/${encodeURIComponent(code)}` as const,
+    parameterVersions: (code: string) =>
+      `/master-data/parameters/${encodeURIComponent(code)}/versions` as const,
+    parameterVersion: (code: string, version: number) =>
+      `/master-data/parameters/${encodeURIComponent(code)}/versions/${version}` as const,
+    goLiveCheck: "/master-data/go-live-check",
+    goLiveSignoffs: "/master-data/go-live-signoffs",
+    legalCitations: "/master-data/legal-citations",
+    legalCitationDetail: (code: string) =>
+      `/master-data/legal-citations/${encodeURIComponent(code)}` as const,
+    legalCitationVersions: (code: string) =>
+      `/master-data/legal-citations/${encodeURIComponent(code)}/versions` as const,
+    legalCitationVersion: (code: string, version: number) =>
+      `/master-data/legal-citations/${encodeURIComponent(code)}/versions/${version}` as const,
+    paymentChannels: "/master-data/payment-channels",
+    paymentChannelDetail: (id: string) =>
+      `/master-data/payment-channels/${encodeURIComponent(id)}` as const,
+    paymentChannelActivate: (id: string) =>
+      `/master-data/payment-channels/${encodeURIComponent(id)}/activate` as const,
+    paymentChannelDeactivate: (id: string) =>
+      `/master-data/payment-channels/${encodeURIComponent(id)}/deactivate` as const,
+    numberFormats: "/master-data/number-formats",
+    numberFormatDetail: (code: string) =>
+      `/master-data/number-formats/${encodeURIComponent(code)}` as const,
+    events: "/master-data/events",
+    eventDetail: (type: string) =>
+      `/master-data/events/${encodeURIComponent(type)}` as const,
+    eventBindings: (type: string) =>
+      `/master-data/events/${encodeURIComponent(type)}/bindings` as const,
+    eventBinding: (type: string, id: string) =>
+      `/master-data/events/${encodeURIComponent(type)}/bindings/${encodeURIComponent(id)}` as const,
+    reports: "/master-data/reports",
+    reportDetail: (code: string) =>
+      `/master-data/reports/${encodeURIComponent(code)}` as const,
     taxOffices: "/master-data/tax-offices",
     taxOfficeDetail: (id: string) =>
       `/master-data/tax-offices/${encodeURIComponent(id)}` as const,
@@ -86,6 +173,10 @@ export const apiPaths = {
     regions: "/master-data/regions",
     regionDetail: (id: string) =>
       `/master-data/regions/${encodeURIComponent(id)}` as const,
+    regionActivate: (id: string) =>
+      `/master-data/regions/${encodeURIComponent(id)}/activate` as const,
+    regionDeactivate: (id: string) =>
+      `/master-data/regions/${encodeURIComponent(id)}/deactivate` as const,
     revenueTargets: "/master-data/revenue-targets",
     revenueTargetDetail: (id: string) =>
       `/master-data/revenue-targets/${encodeURIComponent(id)}` as const,
@@ -101,13 +192,6 @@ export const apiPaths = {
       `/master-data/bank-accounts/${encodeURIComponent(id)}/activate` as const,
     bankAccountDeactivate: (id: string) =>
       `/master-data/bank-accounts/${encodeURIComponent(id)}/deactivate` as const,
-    organizations: "/master-data/organizations",
-    organizationDetail: (id: string) =>
-      `/master-data/organizations/${encodeURIComponent(id)}` as const,
-    organizationActivate: (id: string) =>
-      `/master-data/organizations/${encodeURIComponent(id)}/activate` as const,
-    organizationDeactivate: (id: string) =>
-      `/master-data/organizations/${encodeURIComponent(id)}/deactivate` as const,
     professions: "/master-data/professions",
     professionDetail: (id: string) =>
       `/master-data/professions/${encodeURIComponent(id)}` as const,

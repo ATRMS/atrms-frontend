@@ -65,9 +65,7 @@ export function AsyncCommandSelect({
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce(search, debounceMs)
 
-  const [pickedLabel, setPickedLabel] = useState<string | undefined>(
-    undefined
-  )
+  const [pickedLabel, setPickedLabel] = useState<string | undefined>(undefined)
 
   const listQuery = useQuery({
     queryKey: [...queryKeyPrefix, debouncedSearch] as const,
@@ -98,8 +96,7 @@ export function AsyncCommandSelect({
     if (hit) setPickedLabel(hit.label)
   }, [value, options])
 
-  const triggerLabel =
-    displayLabel ?? pickedLabel ?? resolvedFromOptions
+  const triggerLabel = displayLabel ?? pickedLabel ?? resolvedFromOptions
 
   return (
     <Popover modal={false} open={open} onOpenChange={setOpen}>
@@ -117,9 +114,7 @@ export function AsyncCommandSelect({
             !triggerLabel && "text-muted-foreground"
           )}
         >
-          <span className="truncate">
-            {triggerLabel ?? placeholder}
-          </span>
+          <span className="truncate">{triggerLabel ?? placeholder}</span>
           <ChevronDownIcon className="size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

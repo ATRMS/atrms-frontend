@@ -42,10 +42,7 @@ export const taxTypesColumns: ColumnDef<TaxTypeListItem>[] = [
     accessorKey: "defaultRate",
     header: "Default rate",
     cell: ({ row }) =>
-      formatTaxTypeDefaultRate(
-        row.original.rateType,
-        row.original.defaultRate
-      ),
+      formatTaxTypeDefaultRate(row.original.rateType, row.original.defaultRate),
   },
   {
     accessorKey: "collectingAuthority",
@@ -57,9 +54,7 @@ export const taxTypesColumns: ColumnDef<TaxTypeListItem>[] = [
   {
     accessorKey: "isActive",
     header: "Status",
-    cell: ({ row }) => (
-      <TaxTypeStatusBadge isActive={row.original.isActive} />
-    ),
+    cell: ({ row }) => <TaxTypeStatusBadge isActive={row.original.isActive} />,
   },
   {
     id: "actions",

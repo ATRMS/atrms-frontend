@@ -19,11 +19,15 @@ import { useUrlSyncedBasicDataTableFilters } from "@/components/shared/use-basic
 import { Button } from "@/components/ui/button"
 import { queryKeys } from "@/lib/query-keys"
 import { taxTypesActiveReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
+import { lookupsQueryOptions } from "@/lib/query/lookups"
 
 export function BankAccountsPage() {
   const [sheetOpen, setSheetOpen] = useState(false)
 
-  const { data: taxTypes = [] } = useQuery(taxTypesActiveReferenceQueryOptions())
+  const { data: taxTypes = [] } = useQuery(
+    taxTypesActiveReferenceQueryOptions()
+  )
+  const { data: lookups } = useQuery(lookupsQueryOptions(["revenueHeads"]))
 
   const taxTypeSelectOptions = useMemo(
     () => [...taxTypes].sort((a, b) => a.name.localeCompare(b.name)),
@@ -31,8 +35,8 @@ export function BankAccountsPage() {
   )
 
   const filters = useMemo(
-    () => bankAccountFilters(taxTypeSelectOptions),
-    [taxTypeSelectOptions]
+    () => bankAccountFilters(taxTypeSelectOptions, lookups?.revenueHeads ?? []),
+    [lookups?.revenueHeads, taxTypeSelectOptions]
   )
 
   const { filterValues, onFiltersPatch } =
@@ -44,7 +48,10 @@ export function BankAccountsPage() {
   )
 
   const listQuery = useQuery({
-    queryKey: [...queryKeys.masterData.bankAccountsLists(), listParams] as const,
+    queryKey: [
+      ...queryKeys.masterData.bankAccountsLists(),
+      listParams,
+    ] as const,
     queryFn: () => fetchBankAccountsList(listParams),
   })
 

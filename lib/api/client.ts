@@ -23,6 +23,9 @@ const fallbackApiError: ApiError = {
   timestamp: new Date().toISOString(),
   path: "",
   traceId: "",
+  code: null,
+  messageKey: null,
+  fieldErrors: [],
 }
 
 export function normaliseError(error: unknown): ApiError {
@@ -40,7 +43,17 @@ export function normaliseError(error: unknown): ApiError {
   const responseData = error.response?.data
 
   if (isApiError(responseData)) {
-    return responseData
+    return {
+      ...fallbackApiError,
+      ...responseData,
+      status: responseData.status,
+      message: responseData.message,
+      code: responseData.code ?? null,
+      messageKey: responseData.messageKey ?? null,
+      fieldErrors: Array.isArray(responseData.fieldErrors)
+        ? responseData.fieldErrors
+        : [],
+    }
   }
 
   return {
@@ -82,6 +95,21 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const config = error.config as RetriableRequestConfig | undefined
+    const hasResponseBody =
+      error.response?.data !== undefined &&
+      error.response?.data !== null &&
+      error.response?.data !== ""
+
+    if (error.response?.status === 403 && !hasResponseBody) {
+      await useAuthStore.getState().logout()
+
+      if (typeof window !== "undefined") {
+        const next = `${window.location.pathname}${window.location.search}`
+        window.location.href = `/login?next=${encodeURIComponent(next)}`
+      }
+
+      return Promise.reject(normaliseError(error))
+    }
 
     if (error.response?.status === 401 && config && !config._retry) {
       config._retry = true
@@ -98,7 +126,8 @@ apiClient.interceptors.response.use(
         await useAuthStore.getState().logout()
 
         if (typeof window !== "undefined") {
-          window.location.href = "/login"
+          const next = `${window.location.pathname}${window.location.search}`
+          window.location.href = `/login?next=${encodeURIComponent(next)}`
         }
       }
     }
@@ -107,12 +136,13 @@ apiClient.interceptors.response.use(
   }
 )
 
-function isApiError(value: unknown): value is ApiError {
+function isApiError(
+  value: unknown
+): value is Partial<ApiError> & Pick<ApiError, "status" | "message"> {
   return (
     typeof value === "object" &&
     value !== null &&
     "status" in value &&
-    "error" in value &&
     "message" in value
   )
 }

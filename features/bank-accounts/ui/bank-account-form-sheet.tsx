@@ -37,11 +37,9 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { fetchTaxTypesList } from "@/features/tax-types/api/tax-types-api"
-import {
-  currenciesReferenceQueryOptions,
-  taxTypesReferenceQueryOptions,
-} from "@/lib/query/admin-reference-select-queries"
+import { currenciesReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
 import { queryKeys } from "@/lib/query-keys"
+import { lookupsQueryOptions } from "@/lib/query/lookups"
 
 async function loadActiveTaxTypeSelectOptions(search: string) {
   const res = await fetchTaxTypesList({
@@ -72,36 +70,7 @@ const emptyCreate: BankAccountCreateFormValues = {
   bankCode: "",
   taxTypeId: "",
   currencyId: "",
-}
-
-function TaxTypeReadOnly({ taxTypeId }: { taxTypeId: string }) {
-  const { data: types = [] } = useQuery(taxTypesReferenceQueryOptions())
-  const label = useMemo(() => {
-    const t = types.find((x) => x.id === taxTypeId)
-    return t ? `${t.code} — ${t.name}` : taxTypeId
-  }, [taxTypeId, types])
-
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs font-medium text-muted-foreground">Tax type</span>
-      <span className="text-sm">{label}</span>
-    </div>
-  )
-}
-
-function CurrencyReadOnly({ currencyId }: { currencyId: string }) {
-  const { data: currencies = [] } = useQuery(currenciesReferenceQueryOptions())
-  const label = useMemo(() => {
-    const c = currencies.find((x) => x.id === currencyId)
-    return c ? `${c.symbol} ${c.code} — ${c.name}` : currencyId
-  }, [currencyId, currencies])
-
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="text-xs font-medium text-muted-foreground">Currency</span>
-      <span className="text-sm">{label}</span>
-    </div>
-  )
+  revenueHeadId: "",
 }
 
 function BankAccountCreateBody({
@@ -113,6 +82,7 @@ function BankAccountCreateBody({
 }) {
   const createMutation = useCreateBankAccountMutation()
   const { data: currencies = [] } = useQuery(currenciesReferenceQueryOptions())
+  const { data: lookups } = useQuery(lookupsQueryOptions(["revenueHeads"]))
 
   const currencyOptions = useMemo(
     () => [...currencies].sort((a, b) => a.code.localeCompare(b.code)),
@@ -162,108 +132,140 @@ function BankAccountCreateBody({
       >
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
           <FieldGroup>
-          <FormField
-            control={form.control}
-            name="accountNumber"
-            label="Account number"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                autoComplete="off"
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="accountName"
-            label="Account name"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bankName"
-            label="Bank name"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bankCode"
-            label="Bank code"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="e.g. 057"
-              />
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="taxTypeId"
-            label="Tax type"
-            required
-            render={({ field, fieldState }) => (
-              <AsyncCommandSelect
-                id={field.name}
-                value={field.value}
-                onValueChange={field.onChange}
-                placeholder="Tax type"
-                aria-invalid={fieldState.invalid}
-                queryKeyPrefix={taxTypeAsyncSelectQueryKeyPrefix}
-                loadOptions={loadActiveTaxTypeSelectOptions}
-              />
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="currencyId"
-            label="Currency"
-            required
-            render={({ field, fieldState }) => (
-              <Select
-                value={field.value || undefined}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger
+            <FormField
+              control={form.control}
+              name="accountNumber"
+              label="Account number"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
                   id={field.name}
                   aria-invalid={fieldState.invalid}
+                  autoComplete="off"
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="accountName"
+              label="Account name"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bankName"
+              label="Bank name"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bankCode"
+              label="Bank code"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="e.g. 057"
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="taxTypeId"
+              label="Tax type"
+              required
+              render={({ field, fieldState }) => (
+                <AsyncCommandSelect
+                  id={field.name}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  placeholder="Tax type"
+                  aria-invalid={fieldState.invalid}
+                  queryKeyPrefix={taxTypeAsyncSelectQueryKeyPrefix}
+                  loadOptions={loadActiveTaxTypeSelectOptions}
+                />
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="revenueHeadId"
+              label="Revenue head"
+              description="Optional — restrict this account to one revenue head."
+              render={({ field, fieldState }) => (
+                <Select
+                  value={field.value || "__none__"}
+                  onValueChange={(value) =>
+                    field.onChange(value === "__none__" ? "" : value)
+                  }
                 >
-                  <SelectValue placeholder="Currency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {currencyOptions.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.symbol} {c.code} — {c.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </FieldGroup>
+                  <SelectTrigger
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Any revenue head" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="__none__">Any revenue head</SelectItem>
+                      {(lookups?.revenueHeads ?? []).map((head) => (
+                        <SelectItem key={head.id} value={head.id}>
+                          {head.code} — {head.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="currencyId"
+              label="Currency"
+              required
+              render={({ field, fieldState }) => (
+                <Select
+                  value={field.value || undefined}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {currencyOptions.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.symbol} {c.code} — {c.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </FieldGroup>
         </div>
 
         <SheetFooter className="shrink-0 gap-2 border-t bg-muted/30 sm:flex-row sm:justify-end">
@@ -289,6 +291,9 @@ function BankAccountEditBody({
   onClose: () => void
 }) {
   const updateMutation = useUpdateBankAccountMutation(row.id)
+  const { data: lookups } = useQuery(
+    lookupsQueryOptions(["currencies", "taxTypes", "revenueHeads"])
+  )
 
   const form = useForm<BankAccountUpdateFormValues>({
     resolver: zodResolver(bankAccountUpdateSchema),
@@ -296,7 +301,10 @@ function BankAccountEditBody({
       accountNumber: row.accountNumber,
       accountName: row.accountName,
       bankName: row.bankName,
-      bankCode: row.bankCode,
+      bankCode: row.bankCode ?? "",
+      currencyId: row.currencyId,
+      taxTypeId: row.taxTypeId ?? "",
+      revenueHeadId: row.revenueHeadId ?? "",
     },
   })
 
@@ -305,7 +313,10 @@ function BankAccountEditBody({
       accountNumber: row.accountNumber,
       accountName: row.accountName,
       bankName: row.bankName,
-      bankCode: row.bankCode,
+      bankCode: row.bankCode ?? "",
+      currencyId: row.currencyId,
+      taxTypeId: row.taxTypeId ?? "",
+      revenueHeadId: row.revenueHeadId ?? "",
     })
   }, [row, form])
 
@@ -314,8 +325,8 @@ function BankAccountEditBody({
       <SheetHeader className="border-b">
         <SheetTitle>Edit bank account</SheetTitle>
         <SheetDescription>
-          Update account and bank details. Tax type and currency cannot be changed
-          here.
+          Update account and bank details. Tax type and currency cannot be
+          changed here.
         </SheetDescription>
       </SheetHeader>
 
@@ -329,62 +340,145 @@ function BankAccountEditBody({
       >
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
           <FieldGroup className="gap-4">
-          <TaxTypeReadOnly taxTypeId={row.taxTypeId} />
-          <CurrencyReadOnly currencyId={row.currencyId} />
-
-          <FormField
-            control={form.control}
-            name="accountNumber"
-            label="Account number"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="accountName"
-            label="Account name"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bankName"
-            label="Bank name"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bankCode"
-            label="Bank code"
-            required
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-              />
-            )}
-          />
-        </FieldGroup>
+            <FormField
+              control={form.control}
+              name="accountNumber"
+              label="Account number"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="taxTypeId"
+              label="Tax type"
+              required
+              render={({ field, fieldState }) => (
+                <Select
+                  value={field.value || undefined}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Tax type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {(lookups?.taxTypes ?? []).map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.code} — {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="currencyId"
+              label="Currency"
+              required
+              render={({ field, fieldState }) => (
+                <Select
+                  value={field.value || undefined}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Currency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {(lookups?.currencies ?? []).map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.code} — {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="revenueHeadId"
+              label="Revenue head"
+              render={({ field, fieldState }) => (
+                <Select
+                  value={field.value || "__none__"}
+                  onValueChange={(value) =>
+                    field.onChange(value === "__none__" ? "" : value)
+                  }
+                >
+                  <SelectTrigger
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                  >
+                    <SelectValue placeholder="Any revenue head" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="__none__">Any revenue head</SelectItem>
+                      {(lookups?.revenueHeads ?? []).map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.code} — {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="accountName"
+              label="Account name"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bankName"
+              label="Bank name"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bankCode"
+              label="Bank code"
+              required
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                />
+              )}
+            />
+          </FieldGroup>
         </div>
 
         <SheetFooter className="shrink-0 gap-2 border-t bg-muted/30 sm:flex-row sm:justify-end">

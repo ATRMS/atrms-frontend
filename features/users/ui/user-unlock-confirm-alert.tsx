@@ -24,9 +24,7 @@ export function UserUnlockConfirmAlert({
       onOpenChange={onOpenChange}
       title="Unlock account?"
       description={
-        <>
-          Unlock {fullName}&apos;s account and restore active access?
-        </>
+        <>Unlock {fullName}&apos;s account and restore active access?</>
       }
       confirmLabel="Unlock"
       isPending={patchStatusMutation.isPending}

@@ -66,11 +66,7 @@ export function RoleRowActions({ role }: { role: RoleListItem }) {
         menuTitle={role.code}
         groups={groups}
       />
-      <EditRoleDialog
-        role={role}
-        open={editOpen}
-        onOpenChange={setEditOpen}
-      />
+      <EditRoleDialog role={role} open={editOpen} onOpenChange={setEditOpen} />
       <DeleteRoleAlert
         role={role}
         open={deleteOpen}

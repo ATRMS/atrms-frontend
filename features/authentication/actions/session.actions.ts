@@ -3,14 +3,20 @@
 import type { AuthSessionPayload } from "@/features/authentication/types"
 
 import {
+  changePasswordRequest,
+  fetchLanguages,
+  forgotPasswordRequest,
   loginRequest,
   logoutUpstreamRequest,
   readSessionFromCookieJar,
+  resetPasswordRequest,
   refreshTokensRequest,
   ensureAuthCookiesValid,
+  updateLanguageRequest,
 } from "@/features/authentication/actions/auth-requests"
+import type { LanguagesResponse } from "@/features/authentication/types"
 import {
-  applyAuthCookies,
+  applyAccessCookies,
   clearAuthCookies,
   getAccessTokenFromCookies,
   getRefreshTokenFromCookies,
@@ -30,12 +36,68 @@ export async function login(
   return loginRequest(trimmed, password)
 }
 
+export async function setPreLoginLanguage(language: string): Promise<void> {
+  const allowed = ["en", "ha", "ig", "pcm", "yo"]
+  if (!allowed.includes(language)) return
+
+  const store = await cookies()
+  store.set("atrms_lang", language, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+  })
+}
+
+export async function requestPasswordReset(email: string): Promise<void> {
+  await forgotPasswordRequest(email.trim())
+}
+
+export async function resetPassword(payload: {
+  userId: string
+  token: string
+  newPassword: string
+}): Promise<void> {
+  await resetPasswordRequest(payload)
+}
+
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string
+): Promise<AuthSessionPayload> {
+  const session = await readSessionFromCookieJar()
+  const accessToken = await getAccessToken()
+
+  if (!session || !accessToken) {
+    throw new Error("Your session has expired. Sign in again.")
+  }
+
+  await changePasswordRequest(accessToken, currentPassword, newPassword)
+  return loginRequest(session.user.email, newPassword)
+}
+
+export async function getLanguages(): Promise<LanguagesResponse> {
+  const accessToken = await getAccessToken()
+  if (!accessToken) throw new Error("Your session has expired.")
+  return fetchLanguages(accessToken)
+}
+
+export async function updateLanguage(language: string): Promise<void> {
+  const accessToken = await getAccessToken()
+  if (!accessToken) throw new Error("Your session has expired.")
+
+  await updateLanguageRequest(accessToken, language)
+  await setPreLoginLanguage(language)
+}
+
 export async function logout(): Promise<void> {
   const store = await cookies()
   const access = getAccessTokenFromCookies(store)
+  const refresh = getRefreshTokenFromCookies(store)
 
-  if (access) {
-    await logoutUpstreamRequest(access)
+  if (access && refresh) {
+    await logoutUpstreamRequest(access, refresh)
   }
 
   clearAuthCookies(store)
@@ -67,7 +129,7 @@ export async function refreshAuthCookies(): Promise<boolean> {
 
   try {
     const auth = await refreshTokensRequest(refresh)
-    applyAuthCookies(store, auth)
+    applyAccessCookies(store, auth)
     return true
   } catch {
     clearAuthCookies(store)

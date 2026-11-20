@@ -76,9 +76,7 @@ export function buildCorporateUpdatePayload(
     patch.registeredAddress = parsed.registeredAddress.trim()
   }
 
-  if (
-    normStr(parsed.operatingAddress) !== normStr(baseline.operatingAddress)
-  ) {
+  if (normStr(parsed.operatingAddress) !== normStr(baseline.operatingAddress)) {
     patch.operatingAddress = parsed.operatingAddress.trim()
   }
 

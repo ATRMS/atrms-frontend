@@ -1,7 +1,10 @@
 import { apiClient } from "@/lib/api/client"
 import { apiPaths } from "@/lib/api/endpoints"
 import { unwrapApiPayload } from "@/lib/api/envelope"
-import type { CurrencyListItem, CurrencyWritePayload } from "@/features/currencies/types"
+import type {
+  CurrencyListItem,
+  CurrencyWritePayload,
+} from "@/features/currencies/types"
 import type { ApiResponse } from "@/types/api"
 
 export async function fetchCurrenciesList(): Promise<

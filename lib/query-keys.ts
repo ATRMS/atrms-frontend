@@ -22,6 +22,14 @@ export const queryKeys = {
 
   masterData: {
     all: ["master-data"] as const,
+    resourceRoot: (resource: string) =>
+      [...queryKeys.masterData.all, resource] as const,
+    resourceLists: (resource: string) =>
+      [...queryKeys.masterData.resourceRoot(resource), "list"] as const,
+    resourceDetail: (resource: string, id: string) =>
+      [...queryKeys.masterData.resourceRoot(resource), "detail", id] as const,
+    lookups: (types: readonly string[]) =>
+      [...queryKeys.masterData.all, "lookups", ...types] as const,
     businessLinesRoot: () =>
       [...queryKeys.masterData.all, "business-lines"] as const,
     businessLinesLists: () =>
@@ -59,13 +67,6 @@ export const queryKeys = {
       [...queryKeys.masterData.all, "bank-accounts"] as const,
     bankAccountsLists: () =>
       [...queryKeys.masterData.bankAccountsRoot(), "list"] as const,
-    organizationsRoot: () =>
-      [...queryKeys.masterData.all, "organizations"] as const,
-    organizationsLists: () =>
-      [...queryKeys.masterData.organizationsRoot(), "list"] as const,
-    /** Active organizations only (dropdowns, taxpayer profiles). */
-    organizationsActiveRef: () =>
-      [...queryKeys.masterData.organizationsRoot(), "ref-active"] as const,
     professionsRoot: () =>
       [...queryKeys.masterData.all, "professions"] as const,
     professionsLists: () =>
@@ -111,10 +112,30 @@ export const queryKeys = {
     settings: () => [...queryKeys.system.all, "settings"] as const,
   },
 
+  workflow: {
+    all: ["workflow"] as const,
+    inbox: () => [...queryKeys.workflow.all, "inbox"] as const,
+    instance: (id: string) =>
+      [...queryKeys.workflow.all, "instance", id] as const,
+  },
+
+  languages: {
+    all: ["languages"] as const,
+  },
+
+  reports: {
+    all: ["reports"] as const,
+    available: () => [...queryKeys.reports.all, "available"] as const,
+  },
+
   notificationTemplates: {
     all: ["notification-templates"] as const,
     lists: (channel?: string) =>
-      [...queryKeys.notificationTemplates.all, "list", channel ?? "all"] as const,
+      [
+        ...queryKeys.notificationTemplates.all,
+        "list",
+        channel ?? "all",
+      ] as const,
     detail: (id: string) =>
       [...queryKeys.notificationTemplates.all, "detail", id] as const,
   },

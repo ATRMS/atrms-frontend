@@ -83,7 +83,7 @@ function TopbarTinLookup() {
               <RegistryTaxpayerTypeBadge taxpayerType={data.taxpayerType} />
               <TaxpayerStatusBadge status={data.status} />
             </div>
-            <p className="text-sm font-medium leading-snug">
+            <p className="text-sm leading-snug font-medium">
               {data.displayName}
             </p>
             <Link

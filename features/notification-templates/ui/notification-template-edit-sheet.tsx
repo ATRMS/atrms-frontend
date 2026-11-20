@@ -166,10 +166,7 @@ export function NotificationTemplateEditSheet({
                         label="Subject"
                         required
                         render={({ field, fieldState }) => (
-                          <Input
-                            {...field}
-                            aria-invalid={fieldState.invalid}
-                          />
+                          <Input {...field} aria-invalid={fieldState.invalid} />
                         )}
                       />
                     ) : null}
@@ -229,11 +226,11 @@ export function NotificationTemplateEditSheet({
                     {previewSubject ? (
                       <p className="text-sm font-semibold">{previewSubject}</p>
                     ) : null}
-                    <p className="whitespace-pre-wrap text-sm">{previewBody}</p>
+                    <p className="text-sm whitespace-pre-wrap">{previewBody}</p>
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    <p className="whitespace-pre-wrap rounded-lg border bg-muted/30 p-4 text-sm">
+                    <p className="rounded-lg border bg-muted/30 p-4 text-sm whitespace-pre-wrap">
                       {previewBody}
                     </p>
                     <p className="text-xs text-muted-foreground">

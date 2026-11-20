@@ -129,7 +129,9 @@ export function Topbar() {
             >
               <Avatar className="size-8 rounded-lg">
                 <AvatarImage src="" alt={userName} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {initials}
+                </AvatarFallback>
               </Avatar>
               <span className="sr-only">Open user menu</span>
             </button>

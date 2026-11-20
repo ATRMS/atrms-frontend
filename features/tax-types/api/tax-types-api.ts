@@ -30,8 +30,7 @@ function normalizeTaxTypesRequestParams(
     isActive = false
   }
 
-  const category =
-    typeof catRaw === "string" ? catRaw.trim() : undefined
+  const category = typeof catRaw === "string" ? catRaw.trim() : undefined
 
   return {
     ...rest,

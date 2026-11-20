@@ -38,9 +38,7 @@ export const individualTaxpayersColumns: ColumnDef<IndividualTaxpayerListItem>[]
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <TaxpayerStatusBadge status={row.original.status} />
-      ),
+      cell: ({ row }) => <TaxpayerStatusBadge status={row.original.status} />,
     },
     {
       accessorKey: "registeredAt",

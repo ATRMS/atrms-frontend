@@ -3,63 +3,44 @@
  * Sync with `GET …/permissions` (or equivalent) — order follows backend modules.
  */
 export const PermissionCodes = {
-  // ASSESSMENT
-  assessmentApprove: "assessment:approve",
-  assessmentCancel: "assessment:cancel",
-  assessmentCreate: "assessment:create",
-  assessmentRead: "assessment:read",
-  assessmentSendNotice: "assessment:send-notice",
-  assessmentUpdate: "assessment:update",
-
-  // AUDIT
+  attachmentRead: "attachment:read",
+  attachmentUpload: "attachment:upload",
   auditExport: "audit:export",
   auditRead: "audit:read",
-
-  // MASTER_DATA
   masterDataRead: "master-data:read",
   masterDataWrite: "master-data:write",
-
-  // PAYMENT
-  paymentApprove: "payment:approve",
-  paymentCreate: "payment:create",
-  paymentLodge: "payment:lodge",
-  paymentRead: "payment:read",
-  paymentReverse: "payment:reverse",
-
-  // REPORT
+  masterDataApprove: "master-data:approve",
+  masterDataSignOff: "master-data:sign-off",
   reportExport: "report:export",
   reportGenerate: "report:generate",
   reportRead: "report:read",
-
-  // ROLE
   roleCreate: "role:create",
   roleDelete: "role:delete",
   roleRead: "role:read",
   roleUpdate: "role:update",
 
-  // SYSTEM
-  systemConfig: "system:config",
-  systemProvisionTenant: "system:provision-tenant",
-
-  // TAXPAYER
+  systemRead: "system:read",
+  systemWrite: "system:write",
   taxpayerApproveTin: "taxpayer:approve-tin",
   taxpayerCreate: "taxpayer:create",
   taxpayerDelete: "taxpayer:delete",
   taxpayerRead: "taxpayer:read",
   taxpayerUpdate: "taxpayer:update",
 
-  // USER
+  userAssignRole: "user:assign-role",
   userCreate: "user:create",
   userDelete: "user:delete",
   userRead: "user:read",
   userResetPassword: "user:reset-password",
   userUpdate: "user:update",
+  workflowInbox: "workflow:inbox",
+  workflowRead: "workflow:read",
+  workflowConfigure: "workflow:configure",
 } as const
 
 export type PermissionCode =
   (typeof PermissionCodes)[keyof typeof PermissionCodes]
 
-/** All codes above — 34 permissions from the permissions catalog API. */
 export const ALL_PERMISSION_CODES = Object.values(
   PermissionCodes
 ) as PermissionCode[]

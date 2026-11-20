@@ -34,7 +34,7 @@ export function NotificationTemplatesPage() {
 
   return (
     <PermissionGate
-      permission={PermissionCodes.systemConfig}
+      permission={PermissionCodes.systemRead}
       fallback={
         <PermissionDeniedFallback resourceLabel="notification templates" />
       }

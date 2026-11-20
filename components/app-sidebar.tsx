@@ -3,23 +3,18 @@
 import * as React from "react"
 import {
   BanknoteIcon,
-  BellIcon,
-  BriefcaseIcon,
   Building2Icon,
-  CircleDollarSignIcon,
-  FileSlidersIcon,
-  FileTextIcon,
-  IdCardIcon,
-  KeyRoundIcon,
+  CheckCheckIcon,
+  FileChartColumnIcon,
+  GavelIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
-  MapPinIcon,
+  NetworkIcon,
   Settings2Icon,
   ShieldIcon,
-  UsersIcon,
-  WalletCardsIcon,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -36,13 +31,16 @@ import {
   PermissionCodes,
   type PermissionCode,
 } from "@/features/authentication/lib/permission-codes"
-import type { AuthUser } from "@/features/authentication/types"
+import type { AuthSessionPayload } from "@/features/authentication/types"
+import { fetchWorkflowInbox } from "@/features/workflow/api/workflow-api"
+import { queryKeys } from "@/lib/query-keys"
 
 type NavItem = {
   title: string
   url: string
   icon?: React.ReactNode
   permission?: PermissionCode
+  badge?: number
   items?: NavItem[]
 }
 
@@ -66,117 +64,202 @@ const data = {
       icon: <LayoutDashboardIcon />,
     },
     {
-      title: "Administration",
-      url: "/admin",
-      icon: <Settings2Icon />,
+      title: "Approvals",
+      url: "/approvals",
+      icon: <CheckCheckIcon />,
+      permission: PermissionCodes.workflowInbox,
+    },
+    {
+      title: "Reports",
+      url: "/reports",
+      icon: <FileChartColumnIcon />,
+      permission: PermissionCodes.reportRead,
+    },
+    {
+      title: "Organisation",
+      url: "/admin/authority-profile",
+      icon: <LandmarkIcon />,
       items: [
         {
-          title: "Business Lines",
-          url: "/admin/business-lines",
-          icon: <Building2Icon />,
-          permission: PermissionCodes.masterDataRead,
-        },
-        {
-          title: "Tax Types",
-          url: "/admin/tax-types",
-          icon: <FileSlidersIcon />,
+          title: "Authority profile",
+          url: "/admin/authority-profile",
           permission: PermissionCodes.masterDataRead,
         },
         {
           title: "Regions",
           url: "/admin/regions",
-          icon: <MapPinIcon />,
           permission: PermissionCodes.masterDataRead,
         },
         {
-          title: "Tax Offices",
+          title: "Tax offices",
           url: "/admin/tax-offices",
-          icon: <Building2Icon />,
           permission: PermissionCodes.masterDataRead,
         },
         {
-          title: "Revenue Targets",
-          url: "/admin/revenue-targets",
-          icon: <CircleDollarSignIcon />,
+          title: "State Agencies (MDAs)",
+          url: "/admin/state-agencies",
           permission: PermissionCodes.masterDataRead,
         },
         {
-          title: "Currencies",
-          url: "/admin/currencies",
-          icon: <BanknoteIcon />,
+          title: "LGAs",
+          url: "/admin/lgas",
+          permission: PermissionCodes.masterDataRead,
+        },
+      ],
+    },
+    {
+      title: "Classification",
+      url: "/admin/sectors",
+      icon: <NetworkIcon />,
+      items: [
+        {
+          title: "Sectors",
+          url: "/admin/sectors",
           permission: PermissionCodes.masterDataRead,
         },
         {
-          title: "Bank Accounts",
-          url: "/admin/bank-accounts",
-          icon: <WalletCardsIcon />,
-          permission: PermissionCodes.masterDataRead,
-        },
-        {
-          title: "Organizations",
-          url: "/admin/organizations",
-          icon: <LandmarkIcon />,
+          title: "Business lines",
+          url: "/admin/business-lines",
           permission: PermissionCodes.masterDataRead,
         },
         {
           title: "Professions",
           url: "/admin/professions",
-          icon: <BriefcaseIcon />,
           permission: PermissionCodes.masterDataRead,
         },
         {
-          title: "Global Settings",
+          title: "Tax types",
+          url: "/admin/tax-types",
+          permission: PermissionCodes.masterDataRead,
+        },
+      ],
+    },
+    {
+      title: "Revenue and law",
+      url: "/admin/revenue-heads",
+      icon: <GavelIcon />,
+      items: [
+        {
+          title: "Revenue heads",
+          url: "/admin/revenue-heads",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Statutory parameters",
+          url: "/admin/parameters",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Legal citations",
+          url: "/admin/legal-citations",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Go-live check",
+          url: "/admin/go-live",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Revenue targets",
+          url: "/admin/revenue-targets",
+          permission: PermissionCodes.masterDataRead,
+        },
+      ],
+    },
+    {
+      title: "Money",
+      url: "/admin/currencies",
+      icon: <BanknoteIcon />,
+      items: [
+        {
+          title: "Currencies",
+          url: "/admin/currencies",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Bank accounts",
+          url: "/admin/bank-accounts",
+          permission: PermissionCodes.masterDataRead,
+        },
+        {
+          title: "Payment channels",
+          url: "/admin/payment-channels",
+          permission: PermissionCodes.masterDataRead,
+        },
+      ],
+    },
+    {
+      title: "System",
+      url: "/admin/settings",
+      icon: <Settings2Icon />,
+      items: [
+        {
+          title: "Global settings",
           url: "/admin/settings",
-          icon: <Settings2Icon />,
-          permission: PermissionCodes.systemConfig,
+          permission: PermissionCodes.systemRead,
         },
         {
-          title: "Notification Templates",
+          title: "Notification templates",
           url: "/admin/notification-templates",
-          icon: <BellIcon />,
-          permission: PermissionCodes.systemConfig,
+          permission: PermissionCodes.systemRead,
         },
         {
-          title: "Audit Trail",
-          url: "/admin/audit-logs",
-          icon: <FileTextIcon />,
-          permission: PermissionCodes.auditRead,
+          title: "Number formats",
+          url: "/admin/number-formats",
+          permission: PermissionCodes.systemRead,
+        },
+        {
+          title: "Events and notifications",
+          url: "/admin/events",
+          permission: PermissionCodes.systemRead,
+        },
+        {
+          title: "Report registry",
+          url: "/admin/report-registry",
+          permission: PermissionCodes.systemRead,
+        },
+      ],
+    },
+    {
+      title: "Access",
+      url: "/admin/users",
+      icon: <ShieldIcon />,
+      items: [
+        {
+          title: "Users",
+          url: "/admin/users",
+          permission: PermissionCodes.userRead,
         },
         {
           title: "Roles",
           url: "/admin/roles",
-          icon: <ShieldIcon />,
           permission: PermissionCodes.roleRead,
         },
         {
           title: "Permissions",
           url: "/admin/permissions",
-          icon: <KeyRoundIcon />,
           permission: PermissionCodes.roleRead,
         },
         {
-          title: "Users",
-          url: "/admin/users",
-          icon: <UsersIcon />,
-          permission: PermissionCodes.userRead,
+          title: "Audit trail",
+          url: "/admin/audit-logs",
+          permission: PermissionCodes.auditRead,
+        },
+        {
+          title: "Taxpayer registry",
+          url: "/admin/taxpayers",
+          permission: PermissionCodes.taxpayerRead,
         },
       ],
-    },
-    {
-      title: "Taxpayer Registry",
-      url: "/admin/taxpayers",
-      icon: <IdCardIcon />,
-      permission: PermissionCodes.taxpayerRead,
     },
   ],
 }
 
-function sidebarNavUser(user: AuthUser | null) {
+function sidebarNavUser(user: AuthSessionPayload["user"] | null) {
   if (!user) return data.user
 
   return {
-    name:
-      [user.firstName, user.lastName].filter(Boolean).join(" ") || user.email,
+    name: user.fullName || user.email,
     email: user.email,
     avatar: "",
   }
@@ -227,11 +310,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
   const authUser = useAuthStore((state) => state.user)
   const hasPermission = useAuthStore((state) => state.hasPermission)
-  const navMain = React.useMemo(() => {
-    const permittedItems = filterByPermission(data.navMain, hasPermission)
-
-    return withActiveState(pathname, permittedItems)
-  }, [hasPermission, pathname])
+  const inbox = useQuery({
+    queryKey: [...queryKeys.workflow.inbox(), "badge"],
+    queryFn: () => fetchWorkflowInbox({ page: 0, size: 1 }),
+    enabled: hasPermission(PermissionCodes.workflowInbox),
+    refetchInterval: 60_000,
+  })
+  const permittedItems = filterByPermission(data.navMain, hasPermission).map(
+    (item) =>
+      item.url === "/approvals"
+        ? { ...item, badge: inbox.data?.meta.total }
+        : item
+  )
+  const navMain = withActiveState(pathname, permittedItems)
 
   return (
     <Sidebar collapsible="icon" {...props}>

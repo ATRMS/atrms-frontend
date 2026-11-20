@@ -6,7 +6,10 @@ import { useState } from "react"
 
 import { PermissionCodes } from "@/features/authentication/lib/permission-codes"
 import { useAuthStore } from "@/features/authentication/store/auth-store"
-import { fetchUserById, fetchUserTransfers } from "@/features/users/api/users-api"
+import {
+  fetchUserById,
+  fetchUserTransfers,
+} from "@/features/users/api/users-api"
 import {
   formatRoleLabel,
   formatUserFullName,
@@ -111,21 +114,20 @@ function UserDetailLoaded({
     }
   }
 
-  const showDeactivate =
-    user.status === "ACTIVE" || user.status === "PENDING"
+  const showDeactivate = user.status === "ACTIVE" || user.status === "PENDING"
   const showActivate = user.status === "INACTIVE" || user.status === "PENDING"
   const showUnlock = user.status === "LOCKED"
 
   return (
     <>
-      <BackLink href="/admin/users">
-        Users
-      </BackLink>
+      <BackLink href="/admin/users">Users</BackLink>
 
       <header className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-semibold tracking-tight">{fullName}</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              {fullName}
+            </h1>
             <UserRoleBadge code={user.role} />
             <UserStatusBadge status={user.status} />
           </div>
@@ -202,11 +204,11 @@ function UserDetailLoaded({
         <TabsContent value="profile">
           <dl className="grid gap-6 sm:grid-cols-2">
             <ProfileReadOnlyField label="Title" value={user.title ?? "—"} />
-            <ProfileReadOnlyField label="Staff ID" value={user.staffId ?? "—"} />
             <ProfileReadOnlyField
-              label="First name"
-              value={user.firstName}
+              label="Staff ID"
+              value={user.staffId ?? "—"}
             />
+            <ProfileReadOnlyField label="First name" value={user.firstName} />
             <ProfileReadOnlyField
               label="Middle name"
               value={user.middleName ?? "—"}
@@ -222,7 +224,10 @@ function UserDetailLoaded({
               label="Role"
               value={formatRoleLabel(user.role)}
             />
-            <ProfileReadOnlyField label="Tax office" value={taxOfficeName(user.taxOfficeId ?? "")} />
+            <ProfileReadOnlyField
+              label="Tax office"
+              value={taxOfficeName(user.taxOfficeId ?? "")}
+            />
           </dl>
         </TabsContent>
 
@@ -259,7 +264,9 @@ function UserDetailLoaded({
                         <TableCell>
                           {taxOfficeName(row.fromTaxOfficeId)}
                         </TableCell>
-                        <TableCell>{taxOfficeName(row.toTaxOfficeId)}</TableCell>
+                        <TableCell>
+                          {taxOfficeName(row.toTaxOfficeId)}
+                        </TableCell>
                         <TableCell className="max-w-[200px] truncate">
                           {row.reason}
                         </TableCell>

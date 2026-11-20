@@ -61,13 +61,12 @@ export function PermissionDeniedFallback({
   variant = "panel",
   accessVerb = "view",
 }: PermissionDeniedFallbackProps) {
-  const body =
-    description ?? (
-      <DefaultPermissionDeniedDescription
-        resourceLabel={resourceLabel}
-        accessVerb={accessVerb}
-      />
-    )
+  const body = description ?? (
+    <DefaultPermissionDeniedDescription
+      resourceLabel={resourceLabel}
+      accessVerb={accessVerb}
+    />
+  )
 
   if (variant === "inline") {
     return (

@@ -93,17 +93,15 @@ export function PermissionsPage() {
           <>
             <div className="flex max-w-xs flex-col gap-2">
               <Label htmlFor="permissions-module-filter">Module</Label>
-              <Select
-                value={moduleFilter}
-                onValueChange={setModuleFilter}
-              >
-                <SelectTrigger id="permissions-module-filter" className="w-full">
+              <Select value={moduleFilter} onValueChange={setModuleFilter}>
+                <SelectTrigger
+                  id="permissions-module-filter"
+                  className="w-full"
+                >
                   <SelectValue placeholder="All modules" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={MODULE_FILTER_ALL}>
-                    All modules
-                  </SelectItem>
+                  <SelectItem value={MODULE_FILTER_ALL}>All modules</SelectItem>
                   {modules.map((key) => (
                     <SelectItem key={key} value={key}>
                       {formatPermissionModuleLabel(key)}

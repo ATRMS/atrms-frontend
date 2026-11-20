@@ -40,11 +40,7 @@ const TABS = [
   },
 ] as const
 
-export function TaxpayersRegistryLayout({
-  children,
-}: {
-  children: ReactNode
-}) {
+export function TaxpayersRegistryLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const activeTab =
     TABS.find((tab) => tab.isActive(pathname))?.value ?? TABS[0].value

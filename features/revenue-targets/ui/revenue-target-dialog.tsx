@@ -82,7 +82,9 @@ export function RevenueTargetDialog({
   const createMutation = useCreateRevenueTargetMutation()
   const updateMutation = useUpdateRevenueTargetMutation(updateId)
 
-  const { data: taxTypes = [] } = useQuery(taxTypesActiveReferenceQueryOptions())
+  const { data: taxTypes = [] } = useQuery(
+    taxTypesActiveReferenceQueryOptions()
+  )
   const { data: currencies = [] } = useQuery(currenciesReferenceQueryOptions())
 
   const taxTypeOptions = useMemo(
@@ -105,9 +107,7 @@ export function RevenueTargetDialog({
     unknown,
     RevenueTargetFormValues
   >({
-    resolver: zodResolver(
-      revenueTargetFormSchema
-    ) as Resolver<
+    resolver: zodResolver(revenueTargetFormSchema) as Resolver<
       RevenueTargetFormInputValues,
       unknown,
       RevenueTargetFormValues
@@ -393,7 +393,9 @@ export function RevenueTargetDialog({
                     if (!/^\d*\.?\d{0,2}$/.test(raw)) return
                     const [whole, frac] = raw.split(".")
                     const grouped = formatThousandsGrouping(whole)
-                    field.onChange(frac !== undefined ? `${grouped}.${frac}` : grouped)
+                    field.onChange(
+                      frac !== undefined ? `${grouped}.${frac}` : grouped
+                    )
                   }}
                   onBlur={field.onBlur}
                   name={field.name}

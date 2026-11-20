@@ -10,14 +10,17 @@ import { BankAccountStatusBadge } from "@/features/bank-accounts/lib/bank-accoun
 import { BankAccountRowActions } from "@/features/bank-accounts/ui/bank-account-row-actions"
 import { taxTypesReferenceQueryOptions } from "@/lib/query/admin-reference-select-queries"
 
-function TaxTypeCell({ taxTypeId }: { taxTypeId: string }) {
+function TaxTypeCell({ taxTypeId }: { taxTypeId: string | null }) {
   const { data: types = [] } = useQuery(taxTypesReferenceQueryOptions())
 
   const label = useMemo(() => {
+    if (!taxTypeId) return "—"
     const t = types.find((x) => x.id === taxTypeId)
     if (t) return `${t.code} — ${t.name}`
     return taxTypeId
   }, [taxTypeId, types])
+
+  if (!taxTypeId) return <span className="text-muted-foreground">—</span>
 
   const resolved = types.some((x) => x.id === taxTypeId)
 

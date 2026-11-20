@@ -50,14 +50,8 @@ function ProfessionCreateBody({
 }) {
   const createMutation = useCreateProfessionMutation()
 
-  const form = useForm<
-    ProfessionCreateInput,
-    unknown,
-    ProfessionCreateOutput
-  >({
-    resolver: zodResolver(
-      professionCreateSchema
-    ) as Resolver<
+  const form = useForm<ProfessionCreateInput, unknown, ProfessionCreateOutput>({
+    resolver: zodResolver(professionCreateSchema) as Resolver<
       ProfessionCreateInput,
       unknown,
       ProfessionCreateOutput
@@ -102,9 +96,7 @@ function ProfessionCreateBody({
                 aria-invalid={fieldState.invalid}
                 placeholder="e.g. LAWYER"
                 autoComplete="off"
-                onChange={(e) =>
-                  field.onChange(e.target.value.toUpperCase())
-                }
+                onChange={(e) => field.onChange(e.target.value.toUpperCase())}
               />
             )}
           />

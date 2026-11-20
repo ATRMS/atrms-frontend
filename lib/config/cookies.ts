@@ -1,6 +1,6 @@
-import { extractPermissionsFromAccessToken } from "@/features/authentication/lib/access-token-permissions"
 import type {
-  AuthResponse,
+  LoginResponse,
+  RefreshResponse,
   AuthSessionPayload,
   AuthUser,
 } from "@/features/authentication/types"
@@ -13,7 +13,7 @@ export const AUTH_COOKIE_USER = "atrms_user"
 export const AUTH_COOKIE_MUST_CHANGE = "atrms_must_change_pw"
 
 /** Refresh cookie lifetime when the API does not send a separate refresh TTL. */
-const REFRESH_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30
+export const REFRESH_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
 
 /** Matches `cookies()` from `next/headers` (request + response mutation during Server Actions). */
 export type AuthCookieStore = {
@@ -58,10 +58,12 @@ function cookieOptions(maxAgeSeconds: number) {
   }
 }
 
-export function applyAuthCookies(store: AuthCookieStore, auth: AuthResponse) {
+export function applyAccessCookies(
+  store: AuthCookieStore,
+  auth: RefreshResponse
+) {
   const accessMaxAge = Math.max(60, Math.floor(auth.expiresIn))
   const accessExpiresAtUnix = Math.floor(Date.now() / 1000) + accessMaxAge
-  const refreshMaxAge = REFRESH_COOKIE_MAX_AGE_SECONDS
 
   store.set(AUTH_COOKIE_ACCESS, auth.accessToken, {
     ...cookieOptions(accessMaxAge),
@@ -70,6 +72,12 @@ export function applyAuthCookies(store: AuthCookieStore, auth: AuthResponse) {
   store.set(AUTH_COOKIE_ACCESS_EXP, String(accessExpiresAtUnix), {
     ...cookieOptions(accessMaxAge),
   })
+}
+
+export function applyLoginCookies(store: AuthCookieStore, auth: LoginResponse) {
+  applyAccessCookies(store, auth)
+
+  const refreshMaxAge = REFRESH_COOKIE_MAX_AGE_SECONDS
 
   store.set(AUTH_COOKIE_REFRESH, auth.refreshToken, {
     ...cookieOptions(refreshMaxAge),
@@ -114,12 +122,15 @@ export function readSessionPayloadFromCookies(
 
   try {
     const user = JSON.parse(raw) as AuthUser
-    const access = getAccessTokenFromCookies(store)
-    const permissions = access
-      ? extractPermissionsFromAccessToken(access)
-      : []
-
-    return { user, mustChangePassword: mustChange, permissions }
+    return {
+      user: {
+        ...user,
+        fullName: [user.firstName, user.lastName].filter(Boolean).join(" "),
+        roleScopes: [],
+      },
+      mustChangePassword: mustChange,
+      permissions: [],
+    }
   } catch {
     return null
   }

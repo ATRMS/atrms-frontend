@@ -12,8 +12,7 @@ export function useCreateProfessionMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: ProfessionWritePayload) =>
-      createProfession(payload),
+    mutationFn: (payload: ProfessionWritePayload) => createProfession(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.masterData.professionsRoot(),

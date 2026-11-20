@@ -8,9 +8,7 @@ export const professionCreateSchema = z.object({
   name: z.string().min(1, "Name is required").trim(),
 })
 
-export type ProfessionCreateFormValues = z.input<
-  typeof professionCreateSchema
->
+export type ProfessionCreateFormValues = z.input<typeof professionCreateSchema>
 
 export const professionEditSchema = z.object({
   name: z.string().min(1, "Name is required").trim(),

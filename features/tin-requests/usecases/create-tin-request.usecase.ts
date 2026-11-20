@@ -12,8 +12,7 @@ export function useCreateTinRequestMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (payload: TinRequestCreatePayload) =>
-      createTinRequest(payload),
+    mutationFn: (payload: TinRequestCreatePayload) => createTinRequest(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: queryKeys.taxpayers.tinRequestsRoot(),

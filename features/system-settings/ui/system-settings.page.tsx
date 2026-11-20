@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
@@ -32,6 +33,8 @@ import { FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { useAuthStore } from "@/features/authentication/store/auth-store"
 
 function SettingsForm({
   settings,
@@ -90,30 +93,13 @@ function SettingsForm({
 
           <TabsContent value="general">
             <FieldGroup className="max-w-lg gap-4">
-              <FormField
-                control={form.control}
-                name="taxAuthorityId"
-                label="Tax authority ID"
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    disabled={readOnly}
-                    aria-invalid={fieldState.invalid}
-                  />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="taxAuthorityName"
-                label="Tax authority name"
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    disabled={readOnly}
-                    aria-invalid={fieldState.invalid}
-                  />
-                )}
-              />
+              <Alert>
+                <AlertDescription>
+                  The authority&apos;s name and codes are under Organisation →{" "}
+                  <Link href="/admin/authority-profile">Authority profile</Link>
+                  .
+                </AlertDescription>
+              </Alert>
             </FieldGroup>
           </TabsContent>
 
@@ -312,10 +298,7 @@ function SettingsForm({
 
       {!readOnly ? (
         <div className="shrink-0 border-t bg-muted/30 px-0 py-4">
-          <Button
-            type="submit"
-            disabled={!isDirty || updateMutation.isPending}
-          >
+          <Button type="submit" disabled={!isDirty || updateMutation.isPending}>
             {updateMutation.isPending ? "Saving…" : "Save changes"}
           </Button>
         </div>
@@ -326,10 +309,13 @@ function SettingsForm({
 
 export function SystemSettingsPage() {
   const settingsQuery = useSystemSettingsQuery()
+  const canWrite = useAuthStore((state) =>
+    state.hasPermission(PermissionCodes.systemWrite)
+  )
 
   return (
     <PermissionGate
-      permission={PermissionCodes.systemConfig}
+      permission={PermissionCodes.systemRead}
       fallback={<PermissionDeniedFallback resourceLabel="global settings" />}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-6">
@@ -349,7 +335,7 @@ export function SystemSettingsPage() {
               "Failed to load settings."}
           </p>
         ) : settingsQuery.data ? (
-          <SettingsForm settings={settingsQuery.data} readOnly={false} />
+          <SettingsForm settings={settingsQuery.data} readOnly={!canWrite} />
         ) : null}
       </div>
     </PermissionGate>

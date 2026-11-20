@@ -5,7 +5,6 @@ import type { QueryClient } from "@tanstack/react-query"
 import {
   businessLinesReferenceQueryOptions,
   currenciesReferenceQueryOptions,
-  organizationsActiveReferenceQueryOptions,
   professionsActiveReferenceQueryOptions,
   regionsReferenceQueryOptions,
   rolesReferenceSelectQueryOptions,
@@ -32,6 +31,5 @@ export async function prefetchAdminReferenceSelectQueries(
     queryClient.prefetchQuery(taxTypesActiveReferenceQueryOptions()),
     queryClient.prefetchQuery(currenciesReferenceQueryOptions()),
     queryClient.prefetchQuery(professionsActiveReferenceQueryOptions()),
-    queryClient.prefetchQuery(organizationsActiveReferenceQueryOptions()),
   ])
 }

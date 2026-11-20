@@ -88,10 +88,7 @@ export function UsersPage() {
           description="Manage IRS officer accounts, roles, and office assignments."
           action={
             <PermissionGate permission={PermissionCodes.userCreate}>
-              <Button
-                type="button"
-                onClick={() => setCreateSheetOpen(true)}
-              >
+              <Button type="button" onClick={() => setCreateSheetOpen(true)}>
                 Add user
               </Button>
             </PermissionGate>
@@ -105,7 +102,10 @@ export function UsersPage() {
           filters={filters}
         />
 
-        <CreateUserSheet open={createSheetOpen} onOpenChange={setCreateSheetOpen} />
+        <CreateUserSheet
+          open={createSheetOpen}
+          onOpenChange={setCreateSheetOpen}
+        />
       </div>
     </PermissionGate>
   )

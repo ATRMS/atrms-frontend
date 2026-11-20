@@ -56,9 +56,7 @@ export const corporateTaxpayersColumns: ColumnDef<CorporateTaxpayerListItem>[] =
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <TaxpayerStatusBadge status={row.original.status} />
-      ),
+      cell: ({ row }) => <TaxpayerStatusBadge status={row.original.status} />,
     },
     {
       id: "actions",

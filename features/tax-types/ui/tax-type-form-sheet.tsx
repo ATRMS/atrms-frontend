@@ -253,9 +253,7 @@ export function TaxTypeFormSheet({
                       step="any"
                       aria-invalid={fieldState.invalid}
                       placeholder={
-                        rateType === "PERCENTAGE"
-                          ? "e.g. 7.5"
-                          : "Fixed amount"
+                        rateType === "PERCENTAGE" ? "e.g. 7.5" : "Fixed amount"
                       }
                       value={field.value === undefined ? "" : field.value}
                       onChange={(e) => {

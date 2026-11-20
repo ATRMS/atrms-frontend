@@ -1,76 +1,53 @@
 import { apiClient } from "@/lib/api/client"
 import { apiPaths } from "@/lib/api/endpoints"
 import { unwrapApiPayload } from "@/lib/api/envelope"
-import type {
-  RegionListItem,
-  RegionWritePayload,
-} from "@/features/regions/types"
+import type { Region, RegionWritePayload } from "@/features/regions/types"
 import type {
   ApiListParams,
   ApiResponse,
   PaginatedListResponse,
 } from "@/types/api"
 
-export type RegionsListParams = ApiListParams & {
-  /** Filter by geographic level when supported by the list endpoint. */
-  type?: string
-}
-
-function normalizeRegionsRequestParams(
-  params: RegionsListParams
-): ApiListParams & { type?: string } {
-  const { type: typeRaw, ...rest } = params
-  const type =
-    typeof typeRaw === "string" ? typeRaw.trim().toUpperCase() : undefined
-
-  return {
-    ...rest,
-    ...(type ? { type } : {}),
-  }
-}
+export type RegionsListParams = ApiListParams & { active?: boolean }
 
 export async function fetchRegionsList(
   params: RegionsListParams
-): Promise<PaginatedListResponse<RegionListItem>> {
-  const res = await apiClient.get<PaginatedListResponse<RegionListItem>>(
+): Promise<PaginatedListResponse<Region>> {
+  const response = await apiClient.get<PaginatedListResponse<Region>>(
     apiPaths.masterData.regions,
-    {
-      params: normalizeRegionsRequestParams(params),
-    }
+    { params }
   )
-
-  return res.data
+  return response.data
 }
 
-/** Wide fetch for parent dropdowns and label lookups. */
-export async function fetchRegionsReference(): Promise<RegionListItem[]> {
-  const res = await fetchRegionsList({
-    page: 0,
-    size: 500,
-  })
-
-  return res.data
+export async function fetchRegionsReference(): Promise<Region[]> {
+  return (await fetchRegionsList({ page: 0, size: 100 })).data
 }
 
-export async function createRegion(
+export async function saveRegion(
+  id: string | null,
   payload: RegionWritePayload
-): Promise<RegionListItem> {
-  const res = await apiClient.post<ApiResponse<RegionListItem>>(
-    apiPaths.masterData.regions,
-    payload
-  )
-
-  return unwrapApiPayload(res.data)
+): Promise<Region> {
+  const response = id
+    ? await apiClient.put<ApiResponse<Region>>(
+        apiPaths.masterData.regionDetail(id),
+        payload
+      )
+    : await apiClient.post<ApiResponse<Region>>(
+        apiPaths.masterData.regions,
+        payload
+      )
+  return unwrapApiPayload(response.data)
 }
 
-export async function updateRegion(
-  id: string,
-  payload: RegionWritePayload
-): Promise<RegionListItem> {
-  const res = await apiClient.put<ApiResponse<RegionListItem>>(
-    apiPaths.masterData.regionDetail(id),
-    payload
+export async function setRegionActive(
+  region: Region,
+  active: boolean
+): Promise<Region> {
+  const response = await apiClient.patch<ApiResponse<Region>>(
+    active
+      ? apiPaths.masterData.regionActivate(region.id)
+      : apiPaths.masterData.regionDeactivate(region.id)
   )
-
-  return unwrapApiPayload(res.data)
+  return unwrapApiPayload(response.data)
 }

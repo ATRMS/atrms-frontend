@@ -33,16 +33,16 @@ export function UserRowActions({ user }: { user: UserListItem }) {
   )
 
   const subjectLabel =
-    [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ") ||
+    [user.firstName, user.middleName, user.lastName]
+      .filter(Boolean)
+      .join(" ") ||
     user.staffId ||
     user.email
 
   const fullName = formatUserFullName(user)
 
-  const showDeactivate =
-    user.status === "ACTIVE" || user.status === "PENDING"
-  const showActivate =
-    user.status === "INACTIVE" || user.status === "PENDING"
+  const showDeactivate = user.status === "ACTIVE" || user.status === "PENDING"
+  const showActivate = user.status === "INACTIVE" || user.status === "PENDING"
   const showUnlock = user.status === "LOCKED"
 
   const primaryItems = []

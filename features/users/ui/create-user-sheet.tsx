@@ -150,7 +150,7 @@ export function CreateUserSheet({ open, onOpenChange }: CreateUserSheetProps) {
         <SheetContent
           side="right"
           showCloseButton
-          className="flex w-full flex-col gap-0 overflow-hidden p-0  data-[side=right]:sm:max-w-sm"
+          className="flex w-full flex-col gap-0 overflow-hidden p-0 data-[side=right]:sm:max-w-sm"
         >
           <SheetHeader className="border-b">
             <SheetTitle>Create user</SheetTitle>

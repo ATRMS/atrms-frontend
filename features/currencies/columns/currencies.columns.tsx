@@ -21,9 +21,7 @@ export const currenciesColumns: ColumnDef<CurrencyListItem>[] = [
   {
     accessorKey: "symbol",
     header: "Symbol",
-    cell: ({ row }) => (
-      <span className="text-lg">{row.original.symbol}</span>
-    ),
+    cell: ({ row }) => <span className="text-lg">{row.original.symbol}</span>,
   },
   {
     accessorKey: "isDefault",

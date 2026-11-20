@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useQuery } from "@tanstack/react-query"
 
-import { loadActiveOrganizationsAsyncOptions } from "@/features/organizations/lib/async-command-select-options"
+import { loadCorporateEmployerOptions } from "@/features/taxpayers/lib/corporate-employer-select"
 import { loadActiveProfessionsAsyncOptions } from "@/features/professions/lib/async-command-select-options"
 import {
   registerIndividualFormSchema,
@@ -140,312 +140,307 @@ export function RegisterIndividualSheet({
         >
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
             <FieldGroup className="gap-4">
-            <p className="text-sm font-semibold">Identity</p>
+              <p className="text-sm font-semibold">Identity</p>
 
-            <FormField
-              control={form.control}
-              name="tin"
-              label="TIN"
-              required
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  autoComplete="off"
-                  readOnly={tinLocked}
-                  aria-invalid={fieldState.invalid}
-                  className={cn(tinLocked && "bg-muted")}
-                />
-              )}
-            />
-
-            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="firstName"
-                label="First name"
+                name="tin"
+                label="TIN"
+                required
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    autoComplete="off"
+                    readOnly={tinLocked}
+                    aria-invalid={fieldState.invalid}
+                    className={cn(tinLocked && "bg-muted")}
+                  />
+                )}
+              />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  label="First name"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="middleName"
+                  label="Middle name"
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="lastName"
+                label="Last name"
                 required
                 render={({ field, fieldState }) => (
                   <Input {...field} aria-invalid={fieldState.invalid} />
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="middleName"
-                label="Middle name"
+                name="dateOfBirth"
+                label="Date of birth"
+                required
+                description="Must be at least 16 years old."
+                render={({ field, fieldState }) => (
+                  <DobPicker
+                    id={field.name}
+                    value={field.value}
+                    onChange={field.onChange}
+                    invalid={fieldState.invalid}
+                  />
+                )}
+              />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  label="Gender"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger aria-invalid={fieldState.invalid}>
+                        <SelectValue placeholder="Gender" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="MALE">Male</SelectItem>
+                        <SelectItem value="FEMALE">Female</SelectItem>
+                        <SelectItem value="OTHER">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="maritalStatus"
+                  label="Marital status"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger aria-invalid={fieldState.invalid}>
+                        <SelectValue placeholder="Marital status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="SINGLE">Single</SelectItem>
+                        <SelectItem value="MARRIED">Married</SelectItem>
+                        <SelectItem value="DIVORCED">Divorced</SelectItem>
+                        <SelectItem value="WIDOWED">Widowed</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="nationality"
+                label="Nationality"
+                required
                 render={({ field, fieldState }) => (
                   <Input {...field} aria-invalid={fieldState.invalid} />
                 )}
               />
-            </div>
+            </FieldGroup>
 
-            <FormField
-              control={form.control}
-              name="lastName"
-              label="Last name"
-              required
-              render={({ field, fieldState }) => (
-                <Input {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              label="Date of birth"
-              required
-              description="Must be at least 16 years old."
-              render={({ field, fieldState }) => (
-                <DobPicker
-                  id={field.name}
-                  value={field.value}
-                  onChange={field.onChange}
-                  invalid={fieldState.invalid}
+            <FieldGroup className="gap-4 border-t pt-4">
+              <p className="text-sm font-semibold">Identification</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="nin"
+                  label="NIN"
+                  description="Optional — 11 digits when provided."
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      inputMode="numeric"
+                      maxLength={11}
+                      aria-invalid={fieldState.invalid}
+                    />
+                  )}
                 />
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="bvn"
+                  label="BVN"
+                  description="Optional — 11 digits when provided."
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      inputMode="numeric"
+                      maxLength={11}
+                      aria-invalid={fieldState.invalid}
+                    />
+                  )}
+                />
+              </div>
+            </FieldGroup>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <FieldGroup className="gap-4 border-t pt-4">
+              <p className="text-sm font-semibold">
+                Contact &amp; classification
+              </p>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  label="Phone"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  label="Email"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      type="email"
+                      autoComplete="email"
+                      aria-invalid={fieldState.invalid}
+                    />
+                  )}
+                />
+              </div>
+
               <FormField
                 control={form.control}
-                name="gender"
-                label="Gender"
+                name="address"
+                label="Address"
+                required
+                render={({ field, fieldState }) => (
+                  <Textarea {...field} aria-invalid={fieldState.invalid} />
+                )}
+              />
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="lgaOfOrigin"
+                  label="LGA of origin"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="stateOfOrigin"
+                  label="State of origin"
+                  required
+                  render={({ field, fieldState }) => (
+                    <Input {...field} aria-invalid={fieldState.invalid} />
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="taxOfficeId"
+                label="Tax office"
                 required
                 render={({ field, fieldState }) => (
                   <Select
                     value={field.value}
                     onValueChange={field.onChange}
+                    disabled={
+                      taxOfficesPending || sortedTaxOffices.length === 0
+                    }
                   >
                     <SelectTrigger aria-invalid={fieldState.invalid}>
-                      <SelectValue placeholder="Gender" />
+                      <SelectValue placeholder="Select tax office" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="MALE">Male</SelectItem>
-                      <SelectItem value="FEMALE">Female</SelectItem>
-                      <SelectItem value="OTHER">Other</SelectItem>
+                      {sortedTaxOffices.map((o) => (
+                        <SelectItem key={o.id} value={o.id}>
+                          {o.code} — {o.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="maritalStatus"
-                label="Marital status"
-                required
+                name="professionId"
+                label="Profession"
+                description="Optional — searchable active professions."
                 render={({ field, fieldState }) => (
-                  <Select
-                    value={field.value}
+                  <AsyncCommandSelect
+                    value={field.value ?? ""}
                     onValueChange={field.onChange}
-                  >
-                    <SelectTrigger aria-invalid={fieldState.invalid}>
-                      <SelectValue placeholder="Marital status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="SINGLE">Single</SelectItem>
-                      <SelectItem value="MARRIED">Married</SelectItem>
-                      <SelectItem value="DIVORCED">Divorced</SelectItem>
-                      <SelectItem value="WIDOWED">Widowed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="nationality"
-              label="Nationality"
-              required
-              render={({ field, fieldState }) => (
-                <Input {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
-          </FieldGroup>
-
-          <FieldGroup className="gap-4 border-t pt-4">
-            <p className="text-sm font-semibold">Identification</p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="nin"
-                label="NIN"
-                description="Optional — 11 digits when provided."
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    inputMode="numeric"
-                    maxLength={11}
+                    placeholder="Search professions…"
+                    queryKeyPrefix={professionAsyncQueryKeyPrefix}
+                    loadOptions={loadActiveProfessionsAsyncOptions}
                     aria-invalid={fieldState.invalid}
                   />
                 )}
               />
+
               <FormField
                 control={form.control}
-                name="bvn"
-                label="BVN"
-                description="Optional — 11 digits when provided."
+                name="employerId"
+                label="Employer"
+                description="Optional — a registered corporate taxpayer."
                 render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    inputMode="numeric"
-                    maxLength={11}
+                  <AsyncCommandSelect
+                    value={field.value ?? ""}
+                    onValueChange={field.onChange}
+                    placeholder="Search corporate taxpayers…"
+                    queryKeyPrefix={[
+                      ...queryKeys.taxpayers.all,
+                      "employer-select",
+                    ]}
+                    loadOptions={loadCorporateEmployerOptions}
                     aria-invalid={fieldState.invalid}
                   />
                 )}
               />
-            </div>
-          </FieldGroup>
 
-          <FieldGroup className="gap-4 border-t pt-4">
-            <p className="text-sm font-semibold">
-              Contact &amp; classification
-            </p>
-
-            <div className="grid gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
-                name="phone"
-                label="Phone"
+                name="annualIncome"
+                label="Annual income (NGN)"
                 required
-                render={({ field, fieldState }) => (
-                  <Input {...field} aria-invalid={fieldState.invalid} />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                label="Email"
-                required
+                description="Digits only — formatted with grouping."
                 render={({ field, fieldState }) => (
                   <Input
                     {...field}
-                    type="email"
-                    autoComplete="email"
+                    inputMode="decimal"
                     aria-invalid={fieldState.invalid}
+                    onChange={(e) => {
+                      const raw = e.target.value.replace(/[^\d]/g, "")
+                      field.onChange(raw === "" ? "" : raw)
+                    }}
+                    value={
+                      field.value === "" || field.value == null
+                        ? ""
+                        : parseAnnualIncomeToNumber(field.value).toLocaleString(
+                            "en-NG"
+                          )
+                    }
                   />
                 )}
               />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="address"
-              label="Address"
-              required
-              render={({ field, fieldState }) => (
-                <Textarea {...field} aria-invalid={fieldState.invalid} />
-              )}
-            />
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="lgaOfOrigin"
-                label="LGA of origin"
-                required
-                render={({ field, fieldState }) => (
-                  <Input {...field} aria-invalid={fieldState.invalid} />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stateOfOrigin"
-                label="State of origin"
-                required
-                render={({ field, fieldState }) => (
-                  <Input {...field} aria-invalid={fieldState.invalid} />
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="taxOfficeId"
-              label="Tax office"
-              required
-              render={({ field, fieldState }) => (
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  disabled={taxOfficesPending || sortedTaxOffices.length === 0}
-                >
-                  <SelectTrigger aria-invalid={fieldState.invalid}>
-                    <SelectValue placeholder="Select tax office" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {sortedTaxOffices.map((o) => (
-                      <SelectItem key={o.id} value={o.id}>
-                        {o.code} — {o.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="professionId"
-              label="Profession"
-              description="Optional — searchable active professions."
-              render={({ field, fieldState }) => (
-                <AsyncCommandSelect
-                  value={field.value ?? ""}
-                  onValueChange={field.onChange}
-                  placeholder="Search professions…"
-                  queryKeyPrefix={professionAsyncQueryKeyPrefix}
-                  loadOptions={loadActiveProfessionsAsyncOptions}
-                  aria-invalid={fieldState.invalid}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="employerId"
-              label="Employer"
-              description="Optional — searchable active organizations."
-              render={({ field, fieldState }) => (
-                <AsyncCommandSelect
-                  value={field.value ?? ""}
-                  onValueChange={field.onChange}
-                  placeholder="Search organizations…"
-                  queryKeyPrefix={[
-                    ...queryKeys.masterData.organizationsRoot(),
-                    "async-select",
-                    "register-individual",
-                  ]}
-                  loadOptions={loadActiveOrganizationsAsyncOptions}
-                  aria-invalid={fieldState.invalid}
-                />
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="annualIncome"
-              label="Annual income (NGN)"
-              required
-              description="Digits only — formatted with grouping."
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  inputMode="decimal"
-                  aria-invalid={fieldState.invalid}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/[^\d]/g, "")
-                    field.onChange(raw === "" ? "" : raw)
-                  }}
-                  value={
-                    field.value === "" || field.value == null
-                      ? ""
-                      : parseAnnualIncomeToNumber(field.value).toLocaleString(
-                        "en-NG"
-                      )
-                  }
-                />
-              )}
-            />
-          </FieldGroup>
+            </FieldGroup>
           </div>
 
           <SheetFooter className="shrink-0 gap-2 border-t bg-muted/30 sm:flex-row sm:justify-end">

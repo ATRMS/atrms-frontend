@@ -67,9 +67,12 @@ export function EditRoleDialog({
             className="flex flex-col gap-4"
             onSubmit={form.handleSubmit((values) => {
               if (!role) return
-              mutation.mutate({ roleId: role.id, values }, {
-                onSuccess: () => onOpenChange(false),
-              })
+              mutation.mutate(
+                { roleId: role.id, values },
+                {
+                  onSuccess: () => onOpenChange(false),
+                }
+              )
             })}
           >
             <FieldGroup>
